@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHINKO - Khảo Sát Khách Hàng Showroom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand-logo">
+                <span class="logo-title">SHINKO</span>
+                <span class="logo-sub">EST. 2015</span>
+            </div>
+            <div class="header-divider"></div>
+            <h1>KHẢO SÁT KHÁCH HÀNG SHOWROOM</h1>
+            <p class="subtitle">Vui lòng chọn thông tin khảo sát để ghi nhận dữ liệu chính xác vào hệ thống</p>
+        </header>
+
+        <!-- Progress Stepper -->
+        <div class="stepper-wrapper">
+            <div class="stepper">
+                <div class="step-item active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Chung</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Thông tin KH</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Nhu cầu</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Kết quả</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="5">
+                    <div class="step-circle">5</div>
+                    <span class="step-label" id="step-5-label">Chi tiết</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <form id="surveyForm" autocomplete="off">
+            
+            <!-- PHẦN 1: THÔNG TIN CHUNG -->
+            <div class="form-section active" data-section="1">
+                <div class="section-badge">Phần 1</div>
+                <h2 class="section-title">Thông Tin Chung</h2>
+                
+                <div class="form-group">
+                    <label class="required-label">1. Showroom</label>
+                    <select name="showroom" required>
+                        <option value="" disabled selected>-- Chọn Showroom --</option>
+                        <option value="Trần Duy Hưng">Trần Duy Hưng</option>
+                        <option value="Xã Đàn">Xã Đàn</option>
+                        <option value="Bắc Ninh">Bắc Ninh</option>
+                        <option value="Thanh Hóa">Thanh Hóa</option>
+                        <option value="Ninh Bình">Ninh Bình</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">2. Khung giờ khách đến</label>
+                    <select name="timeSlot" required>
+                        <option value="" disabled selected>-- Chọn khung giờ --</option>
+                        <option value="08:00 – 11:00">08:00 – 11:00</option>
+                        <option value="11:00 – 13:00">11:00 – 13:00</option>
+                        <option value="13:00 – 15:00">13:00 – 15:00</option>
+                        <option value="15:00 – 17:00">15:00 – 17:00</option>
+                        <option value="17:00 – 19:00">17:00 – 19:00</option>
+                        <option value="19:00 – 22:00">19:00 – 22:00</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <div></div>
+                    <button type="button" class="btn btn-primary btn-next" onclick="nextSection(1)">Tiếp tục &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PHẦN 2: THÔNG TIN KHÁCH HÀNG -->
+            <div class="form-section" data-section="2">
+                <div class="section-badge">Phần 2</div>
+                <h2 class="section-title">Thông Tin Khách Hàng</h2>
+
+                <div class="form-group">
+                    <label class="required-label">3. Khách hàng</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerType" value="Khách mới" required>
+                            <span class="card-content">Khách mới</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerType" value="Khách cũ" required>
+                            <span class="card-content">Khách cũ</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">4. Nguồn khách</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerSource" value="Đi ngang cửa hàng" required>
+                            <span class="card-content">Đi ngang cửa hàng</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerSource" value="Marketing (Facebook, TikTok, Website...)" required>
+                            <span class="card-content">Marketing (Facebook, TikTok, Website...)</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerSource" value="Khách được giới thiệu" required>
+                            <span class="card-content">Khách được giới thiệu</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerSource" value="Khách chủ động quay lại" required>
+                            <span class="card-content">Khách chủ động quay lại</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="customerSource" value="Khác" required>
+                            <span class="card-content">Khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">5. Mục đích đến cửa hàng</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Mua sản phẩm" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Mua sản phẩm</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Tham khảo" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Tham khảo</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Đổi hàng/Bảo hành" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Đổi hàng/Bảo hành</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Nhận hàng" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Nhận hàng</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Mua quà tặng" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Mua quà tặng</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="visitPurpose" value="Khác" required onchange="handleVisitPurposeChange()">
+                            <span class="card-content">Khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PHẦN MỞ RỘNG TỰ ĐỘNG KHI CHỌN ĐỔI HÀNG / BẢO HÀNH -->
+                <div id="exchangeSubOptions" class="exchange-sub-box hidden">
+                    <label class="required-label" style="color:var(--toasted-umber); font-size:15px; font-weight:700;">
+                        📌 Phân loại lượt Đổi hàng / Bảo hành:
+                    </label>
+                    <div class="options-grid" style="margin-top:10px;">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="exchangeType" value="same" onchange="handleExchangeTypeChange('same')">
+                            <span class="card-content">
+                                <strong>Đổi ngang / Bảo hành / Đổi size</strong><br>
+                                <small style="color:var(--text-secondary);">(Không phát sinh thêm tiền - 0đ)</small>
+                            </span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="exchangeType" value="upgrade" onchange="handleExchangeTypeChange('upgrade')">
+                            <span class="card-content">
+                                <strong>Đổi nâng cấp (Cao tiền hơn)</strong><br>
+                                <small style="color:var(--toasted-umber); font-weight:bold;">(Khách trả thêm tiền chênh lệch)</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- KHU VỰC ĐIỀN THÔNG TIN ĐỔI NÂNG CẤP (NẾU CÓ THU THÊM TIỀN) -->
+                    <div id="exchangeUpgradeDetails" class="exchange-upgrade-box hidden" style="margin-top:16px;">
+                        <div class="form-group">
+                            <label class="required-label">Số tiền thu thêm chênh lệch (VNĐ) <span class="hint">(Ví dụ: 1000000)</span></label>
+                            <input type="number" name="exchangeUpgradeAmount" class="form-control" placeholder="Nhập số tiền thu thêm VNĐ" min="10000" max="500000000">
+                        </div>
+                        <div class="form-group">
+                            <label>Mã hóa đơn đổi hàng <span class="hint">(Nhập từ phần mềm POS - Tùy chọn)</span></label>
+                            <input type="text" name="exchangeInvoiceCode" class="form-control" placeholder="Ví dụ: HD-DOI-00123">
+                        </div>
+                        <div class="form-group">
+                            <label class="required-label">Nhóm sản phẩm khách lấy thêm <span class="hint">(Có thể chọn nhiều)</span></label>
+                            <div class="options-grid">
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Giày"><span class="card-content">Giày</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Polo"><span class="card-content">Polo</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Tshirt"><span class="card-content">Tshirt</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Sơ mi"><span class="card-content">Sơ mi</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Quần"><span class="card-content">Quần</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Jacket"><span class="card-content">Jacket</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Blazer"><span class="card-content">Blazer</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Áo len"><span class="card-content">Áo len</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Áo da"><span class="card-content">Áo da</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Dây lưng"><span class="card-content">Dây lưng</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Ví/Bóp tay"><span class="card-content">Ví/Bóp tay</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Cặp/Túi"><span class="card-content">Cặp/Túi</span></label>
+                                <label class="option-card checkbox-card"><input type="checkbox" name="exchangeProducts" value="Phụ kiện khác"><span class="card-content">Phụ kiện khác</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary btn-prev" onclick="prevSection(2)">&larr; Quay lại</button>
+                    <button type="button" class="btn btn-primary btn-next" onclick="nextSection(2)">Tiếp tục &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PHẦN 3: NHU CẦU KHÁCH HÀNG -->
+            <div class="form-section" data-section="3">
+                <div class="section-badge">Phần 3</div>
+                <h2 class="section-title">Nhu Cầu Khách Hàng</h2>
+
+                <div class="form-group">
+                    <label class="required-label">6. Khách quan tâm nhóm sản phẩm nào? <span class="hint">(Có thể chọn nhiều)</span></label>
+                    <div class="options-grid">
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Giày">
+                            <span class="card-content">Giày</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Polo">
+                            <span class="card-content">Polo</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Tshirt">
+                            <span class="card-content">Tshirt</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Sơ mi">
+                            <span class="card-content">Sơ mi</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Quần">
+                            <span class="card-content">Quần</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Jacket">
+                            <span class="card-content">Jacket</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Blazer">
+                            <span class="card-content">Blazer</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Áo len">
+                            <span class="card-content">Áo len</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Áo da">
+                            <span class="card-content">Áo da</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Dây lưng">
+                            <span class="card-content">Dây lưng</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Ví/Bóp tay">
+                            <span class="card-content">Ví/Bóp tay</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Cặp/Túi">
+                            <span class="card-content">Cặp/Túi</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="interestedProducts" value="Phụ kiện khác">
+                            <span class="card-content">Phụ kiện khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">7. Khách có thử sản phẩm không?</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="triedProduct" value="Có thử" required>
+                            <span class="card-content">Có thử</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="triedProduct" value="Không thử" required>
+                            <span class="card-content">Không thử</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="triedProduct" value="Chỉ xem" required>
+                            <span class="card-content">Chỉ xem</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary btn-prev" onclick="prevSection(3)">&larr; Quay lại</button>
+                    <button type="button" class="btn btn-primary btn-next" onclick="nextSection(3)">Tiếp tục &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PHẦN 4: KẾT QUẢ TƯ VẤN -->
+            <div class="form-section" data-section="4">
+                <div class="section-badge">Phần 4</div>
+                <h2 class="section-title">Kết Quả Tư Vấn</h2>
+
+                <div class="form-group">
+                    <label class="required-label">8. Khách có mua hàng không?</label>
+                    <div class="options-grid flex-col">
+                        <label class="option-card radio-card highlight-card green">
+                            <input type="radio" name="hasPurchased" value="Có" required onchange="handlePurchaseChoice('Có')">
+                            <span class="card-content">
+                                <strong>CÓ MUA HÀNG</strong>
+                                <small>Chuyển đến phần thông tin mua hàng</small>
+                            </span>
+                        </label>
+                        <label class="option-card radio-card highlight-card red">
+                            <input type="radio" name="hasPurchased" value="Không" required onchange="handlePurchaseChoice('Không')">
+                            <span class="card-content">
+                                <strong>KHÔNG MUA HÀNG</strong>
+                                <small>Chuyển đến phần lý do chưa chốt đơn</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary btn-prev" onclick="prevSection(4)">&larr; Quay lại</button>
+                    <button type="button" class="btn btn-primary btn-next" onclick="nextSection(4)">Tiếp tục &rarr;</button>
+                </div>
+            </div>
+
+            <!-- PHẦN 5: KHÁCH MUA HÀNG (Nếu chọn CÓ) -->
+            <div class="form-section" data-section="5" id="section-purchased">
+                <div class="section-badge success">Phần 5</div>
+                <h2 class="section-title">Thông Tin Khách Mua Hàng</h2>
+
+                <div class="form-group">
+                    <label class="required-label">9. Mục đích sử dụng</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="usagePurpose" value="Cá nhân sử dụng">
+                            <span class="card-content">Cá nhân sử dụng</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="usagePurpose" value="Mua quà tặng">
+                            <span class="card-content">Mua quà tặng</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="usagePurpose" value="Công ty/Doanh nghiệp">
+                            <span class="card-content">Công ty/Doanh nghiệp</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="usagePurpose" value="Khác">
+                            <span class="card-content">Khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">10. Hình thức mua hàng</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseType" value="Mua nguyên giá">
+                            <span class="card-content">Mua nguyên giá</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseType" value="Mua có ưu đãi">
+                            <span class="card-content">Mua có ưu đãi</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">11. Khách mua bao nhiêu sản phẩm?</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="1">
+                            <span class="card-content">1</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="2">
+                            <span class="card-content">2</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="3">
+                            <span class="card-content">3</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="4">
+                            <span class="card-content">4</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="5">
+                            <span class="card-content">5</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="6">
+                            <span class="card-content">6</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="purchaseQuantity" value="7">
+                            <span class="card-content">7</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">12. Khách mua nhóm sản phẩm nào? <span class="hint">(Có thể chọn nhiều)</span></label>
+                    <div class="options-grid">
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Giày">
+                            <span class="card-content">Giày</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Polo">
+                            <span class="card-content">Polo</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Tshirt">
+                            <span class="card-content">Tshirt</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Sơ mi">
+                            <span class="card-content">Sơ mi</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Quần">
+                            <span class="card-content">Quần</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Jacket">
+                            <span class="card-content">Jacket</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Blazer">
+                            <span class="card-content">Blazer</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Áo len">
+                            <span class="card-content">Áo len</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Áo da">
+                            <span class="card-content">Áo da</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Dây lưng">
+                            <span class="card-content">Dây lưng</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Ví/Bóp tay">
+                            <span class="card-content">Ví/Bóp tay</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Cặp/Túi">
+                            <span class="card-content">Cặp/Túi</span>
+                        </label>
+                        <label class="option-card checkbox-card">
+                            <input type="checkbox" name="purchasedProducts" value="Phụ kiện khác">
+                            <span class="card-content">Phụ kiện khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-label">13. Mã hóa đơn</label>
+                    <input type="text" name="invoiceCode" placeholder="Ví dụ: HD000123">
+                </div>
+
+                <div class="form-group">
+                    <label>14. Giá trị hóa đơn <span class="hint">(VNĐ)</span></label>
+                    <input type="number" name="invoiceAmount" placeholder="Ví dụ: 1500000" min="0" step="1000">
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary btn-prev" onclick="prevSection(5)">&larr; Quay lại</button>
+                    <button type="submit" class="btn btn-success btn-submit">Gửi Kết Quả Khảo Sát ✓</button>
+                </div>
+            </div>
+
+            <!-- PHẦN 6: KHÁCH KHÔNG MUA (Nếu chọn KHÔNG) -->
+            <div class="form-section" data-section="6" id="section-not-purchased">
+                <div class="section-badge danger">Phần 6</div>
+                <h2 class="section-title">Nguyên Nhân Chưa Chốt Đơn</h2>
+
+                <div class="form-group">
+                    <label class="required-label">15. Nguyên nhân chính chưa chốt đơn</label>
+                    <div class="options-grid">
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Giá chưa phù hợp">
+                            <span class="card-content">Giá chưa phù hợp</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Hết size/màu">
+                            <span class="card-content">Hết size/màu</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Chưa thích mẫu">
+                            <span class="card-content">Chưa thích mẫu</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Chỉ tham khảo">
+                            <span class="card-content">Chỉ tham khảo</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Chưa có nhu cầu">
+                            <span class="card-content">Chưa có nhu cầu</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Muốn suy nghĩ thêm">
+                            <span class="card-content">Muốn suy nghĩ thêm</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Đang xem thương hiệu khác">
+                            <span class="card-content">Đang xem thương hiệu khác</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Đợi CT ưu đãi">
+                            <span class="card-content">Đợi CT ưu đãi</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Không vừa form">
+                            <span class="card-content">Không vừa form</span>
+                        </label>
+                        <label class="option-card radio-card">
+                            <input type="radio" name="nonPurchaseReason" value="Khác">
+                            <span class="card-content">Khác</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary btn-prev" onclick="prevSection(6)">&larr; Quay lại</button>
+                    <button type="submit" class="btn btn-success btn-submit">Gửi Kết Quả Khảo Sát ✓</button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="overlay hidden">
+            <div class="spinner"></div>
+            <p>Đang gửi dữ liệu về Google Sheets...</p>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="success-icon">✨</div>
+                <h3>Gửi Khảo Sát Thành Công!</h3>
+                <p>Dữ liệu đã được ghi nhận vào Google Sheet của SHINKO thành công.</p>
+                <button class="btn btn-primary" onclick="resetForm()">Thực hiện khảo sát mới</button>
+            </div>
+        </div>
+        <!-- Custom SHINKO Modal Alert / Confirm -->
+        <div id="shinkoAlertModal" class="modal hidden">
+            <div class="modal-content shinko-modal-content">
+                <div class="shinko-modal-icon" id="shinkoModalIcon">⚠️</div>
+                <h3 id="shinkoModalTitle" class="shinko-modal-title">Thông báo hệ thống</h3>
+                <p id="shinkoModalMessage" class="shinko-modal-msg">Nội dung thông báo...</p>
+                <div class="shinko-modal-actions">
+                    <button type="button" id="shinkoModalCancelBtn" class="btn btn-secondary hidden">Hủy bỏ</button>
+                    <button type="button" id="shinkoModalConfirmBtn" class="btn btn-primary">Đồng ý ✓</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="js/offline_sync.js"></script>
+    <script src="js/shinko_validator.js"></script>
+    <script src="js/shinko_gas_connector.js"></script>
+    <script src="js/shinko_ui_stepper.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

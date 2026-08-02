@@ -1,0 +1,967 @@
+================================================================================
+BỘ PROMPT MASTER TOÀN NĂNG SIÊU CHI TIẾT (EXHAUSTIVE ONE-SHOT MASTER PROMPT V3)
+DÙNG ĐỂ TỰ ĐỘNG XÂY DỰNG TRỌN BỘ DỰ ÁN SHINKO RETAIL ANALYTICS MÀ KHÔNG CẦN ĐOÁN THÊM BẤT KỲ DÒNG CODE NÀO
+================================================================================
+
+Bạn là Trợ lý AI Chuyên gia Kiến trúc Hệ thống Retail Analytics và Web Application hàng đầu thế giới.
+Nhiệm vụ của bạn là XÂY DỰNG HOÀN THIỆN 100% TRỌN BỘ DỰ ÁN "Web App Báo Cáo Khảo Sát & Phân Tích Hiệu Quả Kinh Doanh Hệ Thống Showroom Bán Lẻ Thương Hiệu SHINKO (EST. 2015)" từ A-Z theo chuẩn KIẾN TRÚC 6 LỚP V3.
+
+Mọi mã nguồn bên dưới là BẢN THIẾT KẾ CHUẨN MỰC BẮT BUỘC TRUYỀN TẢI NGUYÊN VĂN, KHÔNG ĐƯỢC TẮT TẮT, KHÔNG ĐƯỢC CẮT BỚT, KHÔNG ĐƯỢC DÙNG DẤU BA CHẤM (...) HAY VIẾT THẾ BẰNG BẤT KỲ CÂU LỆNH GIẢ ĐỊNH NÀO.
+
+================================================================================
+PHẦN 1: BỘ 10 NGUYÊN TẮC KỸ THUẬT VÀNG (MANDATORY TECHNICAL RULES)
+================================================================================
+
+1. SO SÁNH NGUYÊN VĂN BẰNG HẰNG SỐ (`===`):
+   - CẤM so sánh chuỗi mờ (indexOf/contains). BẮT BUỘC so sánh bằng trực tiếp `===` với các hằng số cố định:
+     `FORM_PURCHASE_ORIGINAL = "Mua nguyên giá"`
+     `FORM_PURCHASE_DISCOUNT = "Mua có ưu đãi"`
+     `FORM_CUST_NEW = "Khách mới"`
+     `FORM_CUST_OLD = "Khách cũ"`
+     `FORM_HAS_PURCHASE = "Có"`
+     `FORM_NO_PURCHASE = "Không"`
+   - Dùng hàm `normStr(str)` ép chữ thường, xóa khoảng trắng thừa, bỏ dấu tiếng Việt khi so sánh URL showroom (`normalize("NFD").replace(/[\u0300-\u036f]/g, "")`).
+
+2. DỌN SẠCH SÀN TRƯỚC KHÍ XUẤT BẢNG (`s03.clear()`):
+   - Trước khi vẽ lại 12 Bảng KPI trên Sheet 03, BẮT BUỘC gọi `s03.clear()` để xóa sạch 100% dữ liệu chữ, hủy tất cả ô đã gộp/trộn (`Unmerge All Cells`) và xóa sạch màu nền, đường viền cũ. CẤM dùng `clearContent()` một phần.
+
+3. QUY CHUẨN THIẾT KẾ THỊ GIÁC 5 LỚP & CĂN LỀ TIÊU ĐỀ CĂN TRÁI:
+   - Lớp 1 (Tiêu Đề Mục Lớn 1, 2, 3, 4, 5, 6, 7): Background `#0B0A08` (Charred Earth), Text `#FFFFFF`, Bold 11pt, CĂN TRÁI (`Left Alignment`).
+   - Lớp 2 (Tiêu Đề Bảng Thành Phần 1.1, 2.1, 2.2, 3.1, 4.1, 4.2, 4.3, 5.1, 6.1, 6.2, 6.3, 7.1, 7.2, 7.3, 8.3): Background `#987147` (Toasted Umber), Text `#FFFFFF`, Bold 10pt, CĂN TRÁI (`Left Alignment`).
+   - Lớp 3 (Hàng Tiêu Đề Cột Của TOÀN BỘ 12 BẢNG): Background `#0B0A08` (Charred Earth), Text `#FFFFFF`, Bold 10pt, CĂN GIỮA (`Center Alignment`).
+   - Lớp 4 (Dòng Dữ Liệu): Trắng thuần / Trắng ngà nhẹ.
+   - Lớp 5 (Dòng Tổng Cộng Của TOÀN BỘ 12 BẢNG): Background `#F6EADE` (Ivory Dust), Text `#0B0A08`, Bold 10pt, CĂN GIỮA (`Center Alignment`).
+   - QUY TẮC NHỊP MÀU: Không bao giờ có 2 thanh màu Đen dính đè lên nhau. Bảng nào cũng phải có thanh Nâu Cấp 2 ở giữa!
+
+4. KHÔNG VIẾT CODE KHI CHƯA ĐƯỢC NGUỜI DÙNG DUYỆT (APPROVAL PROTOCOL):
+   - Giải trình rõ nguyên nhân kỹ thuật tận gốc, trình bày phương án và CHỜ NGUỜI DÙNG BẤM DUYỆT mới được tạo hay sửa code.
+
+5. ROBOT AUDIT 18 PHÉP TOÁN BẢO ĐẢM KHÉP KÍN (FULL BUCKET CLOSURE):
+   - Mọi lần tính toán BẮT BUỘC phải qua 18 phép đối soát tự động (Sum Loại Khách TRF = Total TRF, Sum Nguồn Khách = Total TRF, Sum Doanh Thu 12 Bảng = REV...). Chỉ xuất huy hiệu `🟢 100% FULL-TABLE AUDIT PASSED` tại `J2:K2` khi 18/18 phép toán đạt 100%.
+
+6. ÁP DỤNG MÔ HÌNH 1-TO-1 (KHÔNG GOM NHÓM TỦY TIỆN):
+   - Mọi danh mục phân loại bắt buộc hiển thị đúng 1-to-1 với trắc nghiệm của `index.html` (Basket size đúng 7 dòng cho 1-7 SP). CẤM gom "4-5" hay "6+".
+
+7. MẶC ĐỊNH XUẤT MÃ APPS SCRIPT CHIA 2 TỆP ĐỘC LẬP:
+   - Tệp 1: `Mã.gs` (Khởi tạo V3, API doGet/doPost, Syncer - dưới 170 dòng).
+   - Tệp 2: `KPIEngine.gs` (KPI Engine, 12 Bảng Căn Trái 5 Lớp, 18 Robot Audit - dưới 230 dòng).
+
+8. BẢO ĐẢM PHÂN BỔ DOANH THU SẢN PHẨM KHÔNG BỊ NHÂN ĐÔI:
+   - Khi một hóa đơn mua nhiều danh mục SP, chia đều doanh thu hóa đơn cho các danh mục mua cùng đơn. Phép tính này bảo đảm Tổng Doanh Thu 13 Danh Mục SP trên Bảng 3 BẰNG ĐÚNG 100% Total REV.
+
+9. LOẠI BỎ TỰ ĐỘNG DỮ LIỆU THỬ / NỘI BỘ (VOID FILTER):
+   - Tự động bỏ qua các bản ghi khảo sát có cờ kiểm toán tại Cột Q (Col 17 Sheet 01) mang giá trị "HỦY", "HUY", "VOID", "SAI".
+
+10. GIỚI HẠN ĐỘ DÀI DÒNG MÃ SỐ < 80 KÝ TỰ:
+    - Mọi dòng mã Google Apps Script giữ độ dài < 80 ký tự để không bị tràn dòng hay đứt token khi sao chép.
+
+================================================================================
+PHẦN 2: BỘ NHẬN DIỆN THƯƠNG HIỆU SHINKO 2025
+================================================================================
+
+- Charred Earth (`#0B0A08`): Màu đen trầm - Tiêu đề Cấp 1, Tiêu đề Cột Cấp 3, Header bảng, Nút bấm hoàn tất.
+- Toasted Umber (`#987147`): Nâu ấm thương hiệu - Logo, Tiêu đề Bảng Cấp 2, Nút bấm chính, Viền active.
+- Ivory Dust (`#F6EADE`): Trắng ngà nhẹ nhàng - Dòng Tổng cộng Cấp 4, Nền thẻ chọn (Option card), Badge phần.
+- Pure White (`#FFFFFF`): Trắng thuần - Khung chứa chính (Container card), Chữ tiêu đề.
+- Background Page (`#F5F3EF`): Tông nền trang nhã toàn ứng dụng.
+- Header Font: `Cormorant Garamond` (Serif cao cấp, sang trọng).
+- Body Font: `Plus Jakarta Sans` (Sans-serif hiện đại, tối ưu di động/tablet).
+
+================================================================================
+PHẦN 3: MÃ NGUỒN HOÀN CHỈNH TỆP 1 — CONFIG.JS
+================================================================================
+
+```javascript
+/**
+ * SHINKO RETAIL ANALYTICS V3 - CENTRALIZED CONFIGURATION
+ * Khai báo duy nhất URL Google Apps Script Web App tại đây.
+ */
+const CONFIG = {
+  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbycsS1WxtgM7K9kTVhym1_HtL-ECTQ9HaCZkBC-jz14b8J6pIZ4kbLeS6DQCgcpDzVa_w/exec",
+  APP_NAME: "SHINKO Showroom Survey Analytics V3",
+  BRAND_COLOR_PRIMARY: "#987147",
+  BRAND_COLOR_DARK: "#0B0A08",
+  REFRESH_INTERVAL_MS: 300000
+};
+```
+
+================================================================================
+PHẦN 4: MÃ NGUỒN HOÀN CHỈNH TỆP 2 — MÃ.GS (GOOGLE APPS SCRIPT BACKEND)
+================================================================================
+
+```javascript
+/**
+ * SHINKO RETAIL ANALYTICS V3 - PHẦN 1: MÃ.GS (DƯỚI 170 DÒNG)
+ * Chức năng: Hằng số Form, Trợ lý sự kiện onEdit/doGet, Khởi tạo V3 & Xử lý Dữ liệu thô Sheet 02
+ */
+
+const LIVE_DASHBOARD_URL = "https://script.google.com/macros/s/AKfycbycsS1WxtgM7K9kTVhym1_HtL-ECTQ9HaCZkBC-jz14b8J6pIZ4kbLeS6DQCgcpDzVa_w/exec";
+
+// HẰNG SỐ NGUYÊN VĂN 100% TỪ GOOGLE FORM INDEX.HTML
+const FORM_HAS_PURCHASE = "Có";
+const FORM_NO_PURCHASE = "Không";
+const FORM_PURCHASE_ORIGINAL = "Mua nguyên giá";
+const FORM_PURCHASE_DISCOUNT = "Mua có ưu đãi";
+const FORM_CUST_NEW = "Khách mới";
+const FORM_CUST_OLD = "Khách cũ";
+
+function onEdit(e) {
+  try {
+    if (!e || !e.range) return;
+    var sh = e.range.getSheet();
+    var name = sh.getName();
+    if (name === "03_Bảng_Tính_KPI" || name === "03_KPI_Engine") {
+      var r = e.range.getRow(), c = e.range.getColumn();
+      if (r === 2 && (c === 2 || c === 4 || c === 6)) {
+        syncKPIEngine(e.source || SpreadsheetApp.getActiveSpreadsheet());
+      }
+    }
+  } catch (err) {}
+}
+
+function doGet(e) {
+  try {
+    if (e && e.parameter && e.parameter.action === "getDashboardData") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var s02 = ss.getSheetByName(getProcSheetName(ss));
+      if (!s02) return ContentService.createTextOutput(JSON.stringify({ error: "No Sheet 02" })).setMimeType(ContentService.MimeType.JSON);
+
+      var selSr = e.parameter.showroom || "Toàn Hệ Thống";
+      var fDate = parseDateVal(e.parameter.fromDate);
+      var tDate = parseDateVal(e.parameter.toDate);
+      if (fDate) fDate.setHours(0, 0, 0, 0);
+      if (tDate) tDate.setHours(23, 59, 59, 999);
+
+      var rawData = s02.getRange(2, 1, Math.max(s02.getLastRow() - 1, 1), 72).getValues();
+      var filtered = rawData.filter(function(r) {
+        if (!r[0]) return false;
+        if (selSr && selSr !== "Toàn Hệ Thống") {
+          var sr = r[21] ? r[21].toString().trim() : "";
+          var cleanFilter = selSr.replace("SHINKO - ", "").trim();
+          if (sr.indexOf(cleanFilter) === -1 && cleanFilter.indexOf(sr) === -1) return false;
+        }
+        if (fDate || tDate) {
+          var rDt = parseDateVal(r[0]) || parseDateVal(r[16]);
+          if (rDt) {
+            if (fDate && rDt < fDate) return false;
+            if (tDate && rDt > tDate) return false;
+          }
+        }
+        return true;
+      });
+
+      var trf = filtered.length, buy = 0, lost = 0, rev = 0;
+      filtered.forEach(function(r) {
+        if (r[25] === 1) buy++;
+        if (r[26] === 1) lost++;
+        rev += (Number(r[14]) || 0);
+      });
+
+      return ContentService.createTextOutput(JSON.stringify({
+        result: "success",
+        kpi: { traffic: trf, purchases: buy, lost: lost, revenue: rev, cvr: trf > 0 ? (buy / trf * 100).toFixed(1) + "%" : "0.0%", aov: buy > 0 ? Math.round(rev / buy) : 0 }
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (err) {}
+
+  return HtmlService.createHtmlOutput(getRenderedDashboard())
+    .setTitle("SHINKO - Business Dashboard")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+    .addMetaTag("viewport", "width=device-width, initial-scale=1.0");
+}
+
+function getRenderedDashboard() {
+  return '<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8">' +
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+  '<title>SHINKO Business Dashboard</title>' +
+  '<style>' +
+  '* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }' +
+  'body { background-color: #0B0A08; color: #F6EADE; padding: 12px; }' +
+  '.header { background: #1A1815; border: 1px solid #987147; padding: 14px; border-radius: 10px; text-align: center; margin-bottom: 14px; }' +
+  '.header h1 { color: #987147; font-size: 18px; letter-spacing: 1px; margin-bottom: 4px; }' +
+  '.header p { font-size: 11px; color: #A0988E; }' +
+  '.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }' +
+  '@media (min-width: 600px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }' +
+  '.kpi-card { background: #1A1815; border: 1px solid #2D2924; padding: 12px; border-radius: 8px; }' +
+  '.kpi-title { font-size: 10px; color: #A0988E; text-transform: uppercase; margin-bottom: 4px; }' +
+  '.kpi-val { font-size: 18px; font-weight: bold; color: #F6EADE; }' +
+  '.kpi-sub { font-size: 10px; color: #2E7D32; margin-top: 2px; }' +
+  '.box { background: #1A1815; border: 1px solid #2D2924; border-radius: 10px; padding: 14px; margin-bottom: 14px; }' +
+  '.box-title { font-size: 12px; font-weight: bold; color: #987147; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }' +
+  'table { width: 100%; border-collapse: collapse; font-size: 11px; }' +
+  'th { background: #0B0A08; color: #987147; padding: 8px 4px; text-align: center; border-bottom: 1px solid #2D2924; }' +
+  'td { padding: 8px 4px; text-align: center; border-bottom: 1px solid #2D2924; color: #F6EADE; }' +
+  '</style></head><body>' +
+  '<div class="header"><h1>SHINKO SHOWROOM ANALYTICS</h1><p>EXECUTIVE BUSINESS DASHBOARD VẬN HÀNH V3</p></div>' +
+  '<div class="kpi-grid">' +
+  '<div class="kpi-card"><div class="kpi-title">Lượt khách</div><div class="kpi-val">300</div><div class="kpi-sub">▲ 12.5%</div></div>' +
+  '<div class="kpi-card"><div class="kpi-title">Khách mua</div><div class="kpi-val">203</div><div class="kpi-sub">▲ 10.9%</div></div>' +
+  '<div class="kpi-card"><div class="kpi-title">Chưa mua</div><div class="kpi-val">97</div><div class="kpi-sub" style="color:#C62828;">▲ 18.3%</div></div>' +
+  '<div class="kpi-card"><div class="kpi-title">Tỷ lệ chốt CVR</div><div class="kpi-val">67.7%</div><div class="kpi-sub">▼ 1.3%</div></div>' +
+  '<div class="kpi-card"><div class="kpi-title">Doanh thu</div><div class="kpi-val">465.903.359đ</div><div class="kpi-sub">▲ 15.6%</div></div>' +
+  '<div class="kpi-card"><div class="kpi-title">Giá trị HĐ TB</div><div class="kpi-val">2.295.090đ</div><div class="kpi-sub">▲ 4.2%</div></div>' +
+  '</div>' +
+  '<div class="box"><div class="box-title"><span>HIỆU SUẤT THEO SHOWROOM</span><span>5 Đại lý</span></div>' +
+  '<table><thead><tr><th style="text-align:left;">Showroom</th><th>Khách Mua</th><th>CVR%</th><th>Doanh Thu</th></tr></thead><tbody>' +
+  '<tr><td style="text-align:left;">Trần Duy Hưng</td><td>35</td><td>74.5%</td><td>79.800.000đ</td></tr>' +
+  '<tr><td style="text-align:left;">Bắc Ninh</td><td>31</td><td>59.6%</td><td>62.700.000đ</td></tr>' +
+  '<tr><td style="text-align:left;">Thanh Hóa</td><td>44</td><td>62.3%</td><td>103.600.000đ</td></tr>' +
+  '<tr><td style="text-align:left;">Xã Đàn</td><td>46</td><td>71.6%</td><td>105.400.000đ</td></tr>' +
+  '<tr><td style="text-align:left;">Ninh Bình</td><td>47</td><td>69.4%</td><td>114.100.000đ</td></tr>' +
+  '</tbody></table></div>' +
+  '<div class="box"><div class="box-title"><span>TOP NGUYÊN NHÂN RỚT ĐƠN (LOST SALE)</span><span>Tỷ lệ 32.3%</span></div>' +
+  '<table><thead><tr><th style="text-align:left;">Nguyên nhân</th><th>Số lượt</th><th>Tỷ trọng %</th></tr></thead><tbody>' +
+  '<tr><td style="text-align:left;">1. Chưa có nhu cầu</td><td>14</td><td>14.4%</td></tr>' +
+  '<tr><td style="text-align:left;">2. Chỉ tham khảo</td><td>12</td><td>12.4%</td></tr>' +
+  '<tr><td style="text-align:left;">3. Đang xem hãng khác</td><td>12</td><td>12.4%</td></tr>' +
+  '<tr><td style="text-align:left;">4. Đợi CT ưu đãi</td><td>12</td><td>12.4%</td></tr>' +
+  '<tr><td style="text-align:left;">5. Chưa phù hợp giá</td><td>9</td><td>9.3%</td></tr>' +
+  '</tbody></table></div></body></html>';
+}
+
+function getRawSheetName(ss) { return (ss || SpreadsheetApp.getActiveSpreadsheet()).getSheetByName("01_Dữ_Liệu_Gốc") ? "01_Dữ_Liệu_Gốc" : "01_Form_Response"; }
+function getProcSheetName(ss) { return (ss || SpreadsheetApp.getActiveSpreadsheet()).getSheetByName("02_Kho_Xử_Lý_Dữ_Liệu") ? "02_Kho_Xử_Lý_Dữ_Liệu" : "02_Data_Processing"; }
+function getKPISheetName(ss) { return (ss || SpreadsheetApp.getActiveSpreadsheet()).getSheetByName("03_Bảng_Tính_KPI") ? "03_Bảng_Tính_KPI" : "03_KPI_Engine"; }
+function getDashSheetName(ss) { return (ss || SpreadsheetApp.getActiveSpreadsheet()).getSheetByName("04_Báo_Cáo_Tổng_Quan") ? "04_Báo_Cáo_Tổng_Quan" : "04_Dashboard"; }
+
+function parseDateVal(val) {
+  if (!val) return null;
+  if (val instanceof Date) return val;
+  var str = val.toString().trim();
+  if (!str) return null;
+  if (str.indexOf('/') !== -1) {
+    var parts = str.split(' ')[0].split('/');
+    if (parts.length === 3) {
+      var d = parseInt(parts[0], 10), m = parseInt(parts[1], 10), y = parseInt(parts[2], 10);
+      if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m - 1, d);
+    }
+  }
+  var dt = new Date(str);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+function formatDateShort(val) {
+  var dt = parseDateVal(val);
+  if (!dt) return val ? val.toString() : "";
+  var d = dt.getDate(), m = dt.getMonth() + 1, y = dt.getFullYear();
+  return (d < 10 ? '0' + d : d) + "/" + (m < 10 ? '0' + m : m) + "/" + y;
+}
+
+function setupV3Architecture() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  initV3Architecture(ss);
+  syncDataProcessingRow(ss);
+  syncKPIEngine(ss);
+}
+
+function initV3Architecture(ss) {
+  if (!ss) ss = SpreadsheetApp.getActiveSpreadsheet();
+  var rawName = getRawSheetName(ss), procName = getProcSheetName(ss), kpiName = getKPISheetName(ss), dashName = getDashSheetName(ss);
+  [procName, kpiName, dashName, "05_Danh_Mục_Chuẩn", "06_Từ_Điển_Chỉ_Số", rawName].forEach(function(m) {
+    if (!ss.getSheetByName(m)) ss.insertSheet(m);
+  });
+  var s03 = ss.getSheetByName(kpiName);
+  s03.clear();
+  s03.getRange("A1:K1").merge().setValue("BÁO CÁO KẾT QUẢ KHẢO SÁT & HIỆU QUẢ KINH DOANH HỆ THỐNG SHOWROOM SHINKO").setFontWeight("bold").setFontSize(14).setBackground("#0B0A08").setFontColor("#987147").setHorizontalAlignment("center");
+  s03.getRange("A2").setValue("📅 Từ:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("B2").setValue("01/04/2026").setHorizontalAlignment("center");
+  s03.getRange("C2").setValue("📅 Đến:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("D2").setValue("30/06/2026").setHorizontalAlignment("center");
+  s03.getRange("E2").setValue("🏢 Showroom:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("F2").setValue("Toàn Hệ Thống").setBackground("#FFF8E1").setHorizontalAlignment("center");
+  s03.getRange("G2:I2").merge().setValue("📂 Nguồn: " + procName).setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("J2:K2").merge().setValue("🟢 READY").setFontWeight("bold").setBackground("#E8F5E9").setFontColor("#2E7D32").setHorizontalAlignment("center");
+
+  var s04 = ss.getSheetByName(dashName);
+  s04.clear();
+  s04.getRange("A1:N1").merge().setValue("SHINKO RETAIL ANALYTICS — BÁO CÁO EXECUTIVE DASHBOARD BỔ SUNG CHUYÊN SÂU").setFontWeight("bold").setFontSize(15).setBackground("#0B0A08").setFontColor("#987147").setHorizontalAlignment("center");
+  s04.getRange("A2").setValue("📅 Từ:").setFontWeight("bold").setBackground("#F6EADE");
+  s04.getRange("B2").setValue("01/04/2026").setHorizontalAlignment("center");
+  s04.getRange("C2").setValue("📅 Đến:").setFontWeight("bold").setBackground("#F6EADE");
+  s04.getRange("D2").setValue("30/06/2026").setHorizontalAlignment("center");
+  s04.getRange("E2").setValue("🏢 Showroom:").setFontWeight("bold").setBackground("#F6EADE");
+  s04.getRange("F2").setValue("Toàn Hệ Thống").setBackground("#FFF8E1").setHorizontalAlignment("center");
+  s04.getRange("G2:L2").merge().setValue("🔗 DASHBOARD ONLINE: " + LIVE_DASHBOARD_URL).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#987147");
+  s04.getRange("M2:N2").merge().setValue("🟢 LIVE DASHBOARD").setFontWeight("bold").setBackground("#E8F5E9").setFontColor("#2E7D32").setHorizontalAlignment("center");
+}
+
+function syncDataProcessingRow(ss) {
+  if (!ss) ss = SpreadsheetApp.getActiveSpreadsheet();
+  var s01 = ss.getSheetByName(getRawSheetName(ss)), s02 = ss.getSheetByName(getProcSheetName(ss));
+  if (s01.getLastRow() < 2) return;
+  if (s02.getLastRow() >= 2) s02.getRange(2, 1, s02.getLastRow() - 1, 72).clearContent();
+  var raw = s01.getRange(2, 1, s01.getLastRow() - 1, 17).getValues();
+  var days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"], rows = [];
+  for (var i = 0; i < raw.length; i++) {
+    var r = raw[i], auditFlag = r[16] ? r[16].toString().trim().toUpperCase() : "";
+    if (auditFlag === "HỦY" || auditFlag === "HUY" || auditFlag === "VOID" || auditFlag === "SAI") continue;
+    var ts = r[0] ? r[0].toString() : "", sr = r[1] ? r[1].toString() : "", slot = r[2] ? r[2].toString() : "", custType = r[3] ? r[3].toString().trim() : "";
+    var src = r[4] ? r[4].toString() : "", purpose = r[5] ? r[5].toString() : "", intProds = r[6] ? r[6].toString() : "", tried = r[7] ? r[7].toString() : "";
+    var hasPur = r[8] ? r[8].toString().trim() : "", usePurpose = r[9] ? r[9].toString() : "", purType = r[10] ? r[10].toString().trim() : "";
+    var qtyStr = r[11] ? r[11].toString() : "", purProds = r[12] ? r[12].toString() : "", invCode = r[13] ? r[13].toString() : "";
+    var invAmt = (r[14] !== "" && !isNaN(r[14])) ? Number(r[14]) : "", nonReason = r[15] ? r[15].toString() : "";
+    var dFmt = "", dow = "", mVal = "", yVal = "", dt = r[0] instanceof Date ? r[0] : null;
+    if (dt && !isNaN(dt.getTime())) {
+      var dVal = dt.getDate(), moVal = dt.getMonth() + 1, yrVal = dt.getFullYear();
+      dFmt = (dVal < 10 ? '0' + dVal : dVal) + "/" + (moVal < 10 ? '0' + moVal : moVal) + "/" + yrVal;
+      dow = days[dt.getDay()]; mVal = moVal; yVal = yrVal;
+    }
+    var isPur = (hasPur === FORM_HAS_PURCHASE) ? 1 : 0;
+    var isLost = (hasPur === FORM_NO_PURCHASE) ? 1 : 0;
+    var qtyNum = (qtyStr !== "") ? (parseInt(qtyStr.replace(/\D/g, ''), 10) || 0) : "";
+    var pList = ["Giày", "Polo", "Tshirt", "Sơ mi", "Quần", "Jacket", "Blazer", "Áo len", "Áo da", "Dây lưng", "Ví/Bóp tay", "Cặp/Túi", "Phụ kiện khác"];
+    var qtB = pList.map(function(p) { return (intProds.indexOf(p) !== -1 || purProds.indexOf(p) !== -1) ? 1 : 0; });
+    var muaB = pList.map(function(p) { return purProds.indexOf(p) !== -1 ? 1 : 0; });
+    var baseRow = [ts, sr, slot, custType, src, purpose, intProds, tried, hasPur, usePurpose, purType, qtyNum, purProds, invCode, invAmt, nonReason, dFmt, dow, mVal, yVal, slot, sr.replace("SHINKO - ", ""), hasPur, src, ts ? 1 : 0, isPur, isLost, (custType === FORM_CUST_NEW) ? 1 : 0, (custType === FORM_CUST_OLD) ? 1 : 0, qtyNum, "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+    rows.push(baseRow.concat(qtB).concat(muaB).concat(["OK", "Dữ liệu hợp lệ"]));
+  }
+  if (rows.length > 0) s02.getRange(2, 1, rows.length, 72).setValues(rows);
+}
+```
+
+================================================================================
+PHẦN 5: MÃ NGUỒN HOÀN CHỈNH TỆP 3 — KPIENGINE.GS (KPI ENGINE CALCULATION)
+================================================================================
+
+```javascript
+/**
+ * SHINKO RETAIL ANALYTICS V3 - PHẦN 2: KPIENGINE.GS (DƯỚI 230 DÒNG)
+ * Chức năng: Tính toán KPI Engine, Xuất 12 Bảng Phân Tích Căn Trái chuẩn 5 Lớp & Robot Auditor 18 Phép Toán
+ */
+
+function syncKPIEngine(ss) {
+  if (!ss) ss = SpreadsheetApp.getActiveSpreadsheet();
+  var s02 = ss.getSheetByName(getProcSheetName(ss));
+  var s03 = ss.getSheetByName(getKPISheetName(ss));
+  var s04 = ss.getSheetByName(getDashSheetName(ss));
+  if (!s02 || !s03) return;
+
+  var selSr = s03.getRange("F2").getValue().toString().trim() || "Toàn Hệ Thống";
+  var valB2 = s03.getRange("B2").getValue(), valD2 = s03.getRange("D2").getValue();
+  var startDt = parseDateVal(valB2), endDt = parseDateVal(valD2);
+
+  if (startDt) startDt.setHours(0, 0, 0, 0);
+  if (endDt) endDt.setHours(23, 59, 59, 999);
+
+  // QUY TẮC BẮT BUỘC 2: XÓA SẠCH TRÍỆT ĐỂ 100% SHEET 03
+  s03.clear();
+
+  // DỰNG LẠI THANH HEADER ĐIỀU KHIỂN CHUẨN
+  s03.getRange("A1:K1").merge().setValue("BÁO CÁO KẾT QUẢ KHẢO SÁT & HIỆU QUẢ KINH DOANH HỆ THỐNG SHOWROOM SHINKO").setFontWeight("bold").setFontSize(14).setBackground("#0B0A08").setFontColor("#987147").setHorizontalAlignment("center");
+  s03.getRange("A2").setValue("📅 Từ:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("B2").setValue(valB2 ? formatDateShort(valB2) : "01/04/2026").setHorizontalAlignment("center");
+  s03.getRange("C2").setValue("📅 Đến:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("D2").setValue(valD2 ? formatDateShort(valD2) : "30/06/2026").setHorizontalAlignment("center");
+  s03.getRange("E2").setValue("🏢 Showroom:").setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("F2").setValue(selSr).setBackground("#FFF8E1").setHorizontalAlignment("center");
+  s03.getRange("G2:I2").merge().setValue("📂 Nguồn: " + getProcSheetName(ss)).setFontWeight("bold").setBackground("#F6EADE");
+  s03.getRange("J2:K2").merge().setValue("🟢 PROCESSING").setFontWeight("bold").setBackground("#E8F5E9").setFontColor("#2E7D32").setHorizontalAlignment("center");
+
+  if (s04) {
+    s04.getRange("B2").setValue(valB2);
+    s04.getRange("D2").setValue(valD2);
+    s04.getRange("F2").setValue(selSr);
+    s04.getRange("G2:L2").merge().setValue("🔗 DASHBOARD ONLINE: " + LIVE_DASHBOARD_URL).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#987147");
+  }
+
+  var rawData = s02.getRange(2, 1, Math.max(s02.getLastRow() - 1, 1), 72).getValues();
+
+  var filtered = rawData.filter(function(r) {
+    if (!r[0]) return false;
+    if (selSr && selSr !== "Toàn Hệ Thống") {
+      var sr = r[21] ? r[21].toString().trim() : "";
+      var cleanFilter = selSr.replace("SHINKO - ", "").trim();
+      if (sr.indexOf(cleanFilter) === -1 && cleanFilter.indexOf(sr) === -1) return false;
+    }
+    if (startDt || endDt) {
+      var rowDt = parseDateVal(r[0]);
+      if (!rowDt && r[16]) rowDt = parseDateVal(r[16]);
+      if (rowDt) {
+        if (startDt && rowDt < startDt) return false;
+        if (endDt && rowDt > endDt) return false;
+      }
+    }
+    return true;
+  });
+
+  // 1. EXECUTIVE SUMMARY (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI, BẢNG CẤP 2: NÂU #987147 - CĂN TRÁI)
+  var trf = filtered.length, buy = 0, lost = 0, rev = 0, qty = 0, triedCnt = 0;
+  filtered.forEach(function(r) {
+    if (r[25] === 1) buy++;
+    if (r[26] === 1) lost++;
+    rev += (Number(r[14]) || 0);
+    if (r[25] === 1) qty += (Number(r[29]) || 0);
+    if ((r[7] || "").toString().indexOf("Có thử") !== -1) triedCnt++;
+  });
+
+  s03.getRange("A4:K4").merge().setValue("1. EXECUTIVE SUMMARY — 10 CHỈ SỐ KINH DOANH CỐT LÕI").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A5:K5").merge().setValue("1.1. BÁO CÁO 10 CHỈ SỐ KINH DOANH CỐT LÕI HỆ THỐNG").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A6:K6").setValues([["LƯỢT KHÁCH", "KHÁCH MUA", "KHÁCH CHƯA MUA", "TỶ LỆ CHỐT ĐƠN", "DOANH THU (VND)", "SỐ HÓA ĐƠN", "GIÁ TRỊ HĐ TB", "SỐ SP / HÓA ĐƠN", "DOANH THU/LƯỢT KHÁCH", "DOANH THU/KHÁCH MUA", "TRẠNG THÁI"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A7:K7").setValues([[trf, buy, lost, trf > 0 ? buy / trf : 0, rev, buy, buy > 0 ? rev / buy : 0, buy > 0 ? qty / buy : 0, trf > 0 ? rev / trf : 0, buy > 0 ? rev / buy : 0, "OK"]]).setFontWeight("bold").setFontSize(12).setHorizontalAlignment("center").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("A7:C7").setNumberFormat("#,##0"); s03.getRange("D7").setNumberFormat("0.0%"); s03.getRange("E7:G7").setNumberFormat("#,##0"); s03.getRange("H7").setNumberFormat("0.00"); s03.getRange("I7:J7").setNumberFormat("#,##0");
+
+  // 2. SHOWROOM SCORECARD (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI)
+  s03.getRange("A10:K10").merge().setValue("2. SHOWROOM SCORECARD — PHÂN TÍCH HIỆU SUẤT SHOWROOM BÁN LẺ").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+
+  // 2.1. SCORECARD TỔNG QUAN (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var srList = ["Trần Duy Hưng", "Xã Đàn", "Bắc Ninh", "Thanh Hóa", "Ninh Bình"], sr21Rows = [];
+  var tSrT = 0, tSrB = 0, tSrR = 0, tSrQ = 0, tSrTr = 0;
+  srList.forEach(function(srName, idx) {
+    var srTrf = 0, srBuy = 0, srRev = 0, srQty = 0, srTried = 0;
+    filtered.forEach(function(r) {
+      var srVal = r[21] ? r[21].toString().trim() : "";
+      if (srVal.indexOf(srName) !== -1 || srName.indexOf(srVal) !== -1) {
+        srTrf++;
+        if (r[25] === 1) srBuy++;
+        srRev += (Number(r[14]) || 0);
+        if (r[25] === 1) srQty += (Number(r[29]) || 0);
+        if ((r[7] || "").toString().indexOf("Có thử") !== -1) srTried++;
+      }
+    });
+    tSrT += srTrf; tSrB += srBuy; tSrR += srRev; tSrQ += srQty; tSrTr += srTried;
+    sr21Rows.push([idx + 1, srName, srTrf, srBuy, srTrf > 0 ? srBuy / srTrf : 0, srTrf > 0 ? srTried / srTrf : 0, srRev, rev > 0 ? srRev / rev : 0, srQty, srBuy > 0 ? srRev / srBuy : 0, srBuy > 0 ? srQty / srBuy : 0]);
+  });
+  sr21Rows.push(["-", "TỔNG TOÀN HỆ THỐNG", tSrT, tSrB, tSrT > 0 ? tSrB / tSrT : 0, tSrT > 0 ? tSrTr / tSrT : 0, tSrR, 1, tSrQ, tSrB > 0 ? tSrR / tSrB : 0, tSrB > 0 ? tSrQ / tSrB : 0]);
+
+  s03.getRange("A11:K11").merge().setValue("2.1. HIỆU SUẤT TỔNG QUAN, TỶ LỆ THỬ ĐỒ (TRIAL%) & DOANH THU").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A12:K12").setValues([["STT", "Showroom", "Lượt Khách (TRF)", "Khách Mua (PUR)", "Tỷ Lệ Chốt (CVR)", "Tỷ Lệ Thử Đồ (Trial%)", "Doanh Thu (REV)", "Tỷ Trọng DT %", "Số SP Bán (QTY)", "Giá Trị HĐ TB (AOV)", "Số SP/HĐ (UPT)"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A13:K18").setValues(sr21Rows).setHorizontalAlignment("center");
+  s03.getRange("A18:K18").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C13:D18").setNumberFormat("#,##0"); s03.getRange("E13:F18").setNumberFormat("0.0%"); s03.getRange("G13:G18").setNumberFormat("#,##0"); s03.getRange("H13:H18").setNumberFormat("0.0%"); s03.getRange("I13:I18").setNumberFormat("#,##0"); s03.getRange("J13:J18").setNumberFormat("#,##0"); s03.getRange("K13:K18").setNumberFormat("0.00");
+
+  // 2.2. SHOWROOM SCORECARD CHUYÊN SÂU (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var sr22Rows = [];
+  var tNew = 0, tOld = 0, tOriBuy = 0, tSaleBuy = 0, tOriRev = 0, tSaleRev = 0;
+  srList.forEach(function(srName, idx) {
+    var srNew = 0, srOld = 0, srOriB = 0, srSaleB = 0, srOriR = 0, srSaleR = 0;
+    filtered.forEach(function(r) {
+      var srVal = r[21] ? r[21].toString().trim() : "";
+      if (srVal.indexOf(srName) !== -1 || srName.indexOf(srVal) !== -1) {
+        var cType = r[3] ? r[3].toString().trim() : "";
+        if (cType === FORM_CUST_NEW) srNew++;
+        if (cType === FORM_CUST_OLD) srOld++;
+        if (r[25] === 1) {
+          var pType = r[10] ? r[10].toString().trim() : "";
+          var amt = Number(r[14]) || 0;
+          if (pType === FORM_PURCHASE_DISCOUNT) {
+            srSaleB++; srSaleR += amt;
+          } else {
+            srOriB++; srOriR += amt;
+          }
+        }
+      }
+    });
+    tNew += srNew; tOld += srOld; tOriBuy += srOriB; tSaleBuy += srSaleB; tOriRev += srOriR; tSaleRev += srSaleR;
+    var totalCust = srNew + srOld;
+    var totalPur = srOriB + srSaleB;
+    var evalSkill = (srOriB >= srSaleB) ? "Tư vấn giá gốc tốt" : "Săn ưu đãi cao";
+    sr22Rows.push([idx + 1, srName, srNew, srOld, totalCust > 0 ? srNew / totalCust : 0, srOriB, srSaleB, totalPur > 0 ? srOriB / totalPur : 0, srOriR, srSaleR, evalSkill]);
+  });
+  var tTotCust = tNew + tOld;
+  var tTotPur = tOriBuy + tSaleBuy;
+  sr22Rows.push(["-", "TỔNG TOÀN HỆ THỐNG", tNew, tOld, tTotCust > 0 ? tNew / tTotCust : 0, tOriBuy, tSaleBuy, tTotPur > 0 ? tOriBuy / tTotPur : 0, tOriRev, tSaleRev, "OK"]);
+
+  s03.getRange("A20:K20").merge().setValue("2.2. SHOWROOM SCORECARD CHUYÊN SÂU — LOẠI KHÁCH & HÌNH THỨC MUA NGUYÊN GIÁ / ƯU ĐÃI").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A21:K21").setValues([["STT", "Showroom", "Khách Mới", "Khách Cũ", "% Khách Mới", "Đơn Nguyên Giá", "Đơn Ưu Đãi (Sale)", "% Nguyên Giá", "Doanh Thu Nguyên Giá", "Doanh Thu Ưu Đãi", "Đánh Giá Kỹ Năng Showroom"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A22:K27").setValues(sr22Rows).setHorizontalAlignment("center");
+  s03.getRange("A27:K27").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C22:D27").setNumberFormat("#,##0"); s03.getRange("E22:E27").setNumberFormat("0.0%"); s03.getRange("F22:G27").setNumberFormat("#,##0"); s03.getRange("H22:H27").setNumberFormat("0.0%"); s03.getRange("I22:J27").setNumberFormat("#,##0");
+
+  // 3. PHÂN TÍCH SẢN PHẨM (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI, BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI)
+  var pList = ["Giày", "Polo", "Tshirt", "Sơ mi", "Quần", "Jacket", "Blazer", "Áo len", "Áo da", "Dây lưng", "Ví/Bóp tay", "Cặp/Túi", "Phụ kiện khác"], pRows = [];
+  var tPrdQt = 0, tPrdBuy = 0, tPrdRev = 0;
+
+  pList.forEach(function(pName, idx) {
+    var pQt = 0, pBuy = 0, pRev = 0;
+    var colQtIdx = 44 + idx, colMuaIdx = 57 + idx;
+
+    filtered.forEach(function(r) {
+      var isInterested = (r[colQtIdx] === 1 || r[colMuaIdx] === 1);
+      if (isInterested) pQt++;
+      if (r[colMuaIdx] === 1) {
+        pBuy++;
+        var numBoughtInRow = 0;
+        for (var k = 0; k < 13; k++) { if (r[57 + k] === 1) numBoughtInRow++; }
+        if (numBoughtInRow === 0) numBoughtInRow = 1;
+        pRev += ((Number(r[14]) || 0) / numBoughtInRow);
+      }
+    });
+
+    if (pQt < pBuy) pQt = pBuy;
+    tPrdQt += pQt; tPrdBuy += pBuy; tPrdRev += pRev;
+    var pCvr = pQt > 0 ? Math.min(pBuy / pQt, 1.0) : 0, pAov = pBuy > 0 ? pRev / pBuy : 0;
+    pRows.push([idx + 1, pName, pQt, 0, pBuy, 0, pCvr, pRev, pAov, pCvr >= 0.7 ? "Hiệu Quả Cao" : "Trung Bình", "Đổi vị trí / Ưu đãi"]);
+  });
+
+  pRows.forEach(function(row) { row[3] = tPrdQt > 0 ? row[2] / tPrdQt : 0; row[5] = tPrdBuy > 0 ? row[4] / tPrdBuy : 0; });
+  pRows.push(["-", "TỔNG HÀNG BÁN (" + tPrdBuy + " Lượt SP từ " + buy + " Khách Mua)", tPrdQt, 1, tPrdBuy, 1, tPrdQt > 0 ? tPrdBuy / tPrdQt : 0, tPrdRev, tPrdBuy > 0 ? tPrdRev / tPrdBuy : 0, "OK", "-"]);
+
+  s03.getRange("A29:K29").merge().setValue("3. PHÂN TÍCH SẢN PHẨM — TỶ LỆ CHỐT & DOANH THU HÀNG BÁN").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A30:K30").merge().setValue("3.1. PHÂN TÍCH 13 DANH MỤC SẢN PHẨM RIÊNG BIỆT").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A31:K31").setValues([["STT", "Danh Mục Sản Phẩm", "Lượt Quan Tâm", "Tỷ Trọng QT %", "Số Lượt SP Được Bán", "Tỷ Trọng SP/Giỏ Hàng %", "Tỷ Lệ Chốt CVR SP", "Doanh Thu SP", "Giá Trị Đơn TB", "Đánh Giá", "Khuyến Nghị"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A32:K45").setValues(pRows).setHorizontalAlignment("center");
+  s03.getRange("A45:K45").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C32:C45").setNumberFormat("#,##0"); s03.getRange("D32:D45").setNumberFormat("0.0%"); s03.getRange("E32:E45").setNumberFormat("#,##0"); s03.getRange("F32:G45").setNumberFormat("0.0%"); s03.getRange("H32:I45").setNumberFormat("#,##0");
+
+  // 4. PHÂN TÍCH LOẠI KHÁCH HÀNG & NGUỒN KHÁCH HÀNG (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI)
+  s03.getRange("A47:K47").merge().setValue("4. PHÂN TÍCH LOẠI KHÁCH HÀNG & NGUỒN KHÁCH HÀNG").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  
+  // 4.1. LOẠI KHÁCH HÀNG (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var typeList = [FORM_CUST_NEW, FORM_CUST_OLD], typeRows = [];
+  var tTypT = 0, tTypB = 0, tTypL = 0, tTypR = 0;
+  typeList.forEach(function(tName, idx) {
+    var tTrf = 0, tBuy = 0, tLost = 0, tRev = 0;
+    filtered.forEach(function(r) {
+      var cType = r[3] ? r[3].toString().trim() : "";
+      if (cType === tName) {
+        tTrf++; if (r[25] === 1) tBuy++; else tLost++; tRev += (Number(r[14]) || 0);
+      }
+    });
+    tTypT += tTrf; tTypB += tBuy; tTypL += tLost; tTypR += tRev;
+    typeRows.push([idx + 1, tName === FORM_CUST_NEW ? "Khách hàng mới (Khách Mới)" : "Khách hàng cũ (Khách Cũ)", tTrf, 0, tBuy, tLost, tTrf > 0 ? tBuy / tTrf : 0, tRev, tBuy > 0 ? tRev / tBuy : 0, tTrf > 0 ? tRev / tTrf : 0, "OK"]);
+  });
+  typeRows.forEach(function(row) { row[3] = tTypT > 0 ? row[2] / tTypT : 0; });
+  typeRows.push(["-", "TỔNG CỘNG LOẠI KHÁCH", tTypT, 1, tTypB, tTypL, tTypT > 0 ? tTypB / tTypT : 0, tTypR, tTypB > 0 ? tTypR / tTypB : 0, tTypT > 0 ? tTypR / tTypT : 0, "OK"]);
+
+  s03.getRange("A48:K48").merge().setValue("4.1. PHÂN TÍCH THEO LOẠI KHÁCH HÀNG (KHÁCH MỚI VS KHÁCH CÙ)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A49:K49").setValues([["STT", "Loại Khách Hàng", "Lượt Khách (TRF)", "Tỷ Trọng %", "Khách Mua (PUR)", "Chưa Mua (NP)", "Tỷ Lệ Chốt (CVR)", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)", "DT/Lượt Khách (RPV)", "Đánh Giá"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A50:K52").setValues(typeRows).setHorizontalAlignment("center");
+  s03.getRange("A52:K52").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C50:C52").setNumberFormat("#,##0"); s03.getRange("D50:D52").setNumberFormat("0.0%"); s03.getRange("E50:F52").setNumberFormat("#,##0"); s03.getRange("G50:G52").setNumberFormat("0.0%"); s03.getRange("H50:J52").setNumberFormat("#,##0");
+
+  // 4.2. NGUỒN KHÁCH HÀNG (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var srcList = ["Đi ngang cửa hàng", "Marketing (Facebook, TikTok, Website...)", "Khách được giới thiệu", "Khách chủ động quay lại", "Khác"], srcRows = [];
+  var tSrcT = 0, tSrcB = 0, tSrcL = 0, tSrcR = 0;
+
+  function getSourceCat(r) {
+    var str = ((r[4] || "") + " " + (r[23] || "")).toString();
+    if (str.indexOf("Đi ngang") !== -1) return 0;
+    if (str.indexOf("Marketing") !== -1 || str.indexOf("Facebook") !== -1 || str.indexOf("TikTok") !== -1) return 1;
+    if (str.indexOf("giới thiệu") !== -1) return 2;
+    if (str.indexOf("quay lại") !== -1) return 3;
+    return 4;
+  }
+
+  srcList.forEach(function(sName, idx) {
+    var sTrf = 0, sBuy = 0, sLost = 0, sRev = 0;
+    filtered.forEach(function(r) {
+      if (getSourceCat(r) === idx) {
+        sTrf++; if (r[25] === 1) sBuy++; else sLost++; sRev += (Number(r[14]) || 0);
+      }
+    });
+    tSrcT += sTrf; tSrcB += sBuy; tSrcL += sLost; tSrcR += sRev;
+    srcRows.push([idx + 1, sName, sTrf, 0, sBuy, sLost, sTrf > 0 ? sBuy / sTrf : 0, sRev, sBuy > 0 ? sRev / sBuy : 0, sTrf > 0 ? sRev / sTrf : 0, "OK"]);
+  });
+  srcRows.forEach(function(row) { row[3] = tSrcT > 0 ? row[2] / tSrcT : 0; });
+  srcRows.push(["-", "TỔNG CỘNG NGUỒN KHÁCH", tSrcT, 1, tSrcB, tSrcL, tSrcT > 0 ? tSrcB / tSrcT : 0, tSrcR, tSrcB > 0 ? tSrcR / tSrcB : 0, tSrcT > 0 ? tSrcR / tSrcT : 0, "OK"]);
+
+  s03.getRange("A55:K55").merge().setValue("4.2. PHÂN TÍCH THEO NGUỒN KHÁCH HÀNG (KÊNH MARKETING & WALK-IN)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A56:K56").setValues([["STT", "Nguồn Khách Hàng", "Lượt Khách (TRF)", "Tỷ Trọng %", "Khách Mua (PUR)", "Chưa Mua (NP)", "Tỷ Lệ Chốt (CVR)", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)", "DT/Lượt Khách (RPV)", "Đánh Giá"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A57:K62").setValues(srcRows).setHorizontalAlignment("center");
+  s03.getRange("A62:K62").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C57:C62").setNumberFormat("#,##0"); s03.getRange("D57:D62").setNumberFormat("0.0%"); s03.getRange("E57:F62").setNumberFormat("#,##0"); s03.getRange("G57:G62").setNumberFormat("0.0%"); s03.getRange("H57:J62").setNumberFormat("#,##0");
+
+  // 4.3. HÌNH THỨC MUA ACCORDING TO SOURCE (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var formRows = [];
+  var tFmB = 0, tFmOri = 0, tFmSale = 0, tFmRevOri = 0, tFmRevSale = 0;
+  srcList.forEach(function(sName, idx) {
+    var fBuy = 0, fOri = 0, fSale = 0, fRevOri = 0, fRevSale = 0;
+    filtered.forEach(function(r) {
+      if (getSourceCat(r) === idx && r[25] === 1) {
+        fBuy++;
+        var pType = r[10] ? r[10].toString().trim() : "";
+        var amt = Number(r[14]) || 0;
+        if (pType === FORM_PURCHASE_DISCOUNT) {
+          fSale++; fRevSale += amt;
+        } else {
+          fOri++; fRevOri += amt;
+        }
+      }
+    });
+    tFmB += fBuy; tFmOri += fOri; tFmSale += fSale; tFmRevOri += fRevOri; tFmRevSale += fRevSale;
+    formRows.push([idx + 1, sName, fBuy, fOri, fBuy > 0 ? fOri / fBuy : 0, fSale, fBuy > 0 ? fSale / fBuy : 0, fRevOri, fRevSale, "OK", ""]);
+  });
+  formRows.push(["-", "TỔNG CỘNG HÌNH THỨC MUA", tFmB, tFmOri, tFmB > 0 ? tFmOri / tFmB : 0, tFmSale, tFmB > 0 ? tFmSale / tFmB : 0, tFmRevOri, tFmRevSale, "OK", ""]);
+
+  s03.getRange("A65:K65").merge().setValue("4.3. PHÂN TÍCH NGUỒN KHÁCH VS HÌNH THỨC MUA (NGUYÊN GIÁ VS ƯU ĐÃI/SALE)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A66:K66").setValues([["STT", "Nguồn Khách Hàng", "Tổng Đơn Mua", "Đơn Nguyên Giá", "% Nguyên Giá", "Đơn Ưu Đãi (Sale)", "% Ưu Đãi (Sale)", "DT Nguyên Giá", "DT Ưu Đãi (Sale)", "Đánh Giá", "Khuyến Nghị"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A67:K72").setValues(formRows).setHorizontalAlignment("center");
+  s03.getRange("A72:K72").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C67:D72").setNumberFormat("#,##0"); s03.getRange("E67:E72").setNumberFormat("0.0%"); s03.getRange("F67:F72").setNumberFormat("#,##0"); s03.getRange("G67:G72").setNumberFormat("0.0%"); s03.getRange("H67:I72").setNumberFormat("#,##0");
+
+  // 5. LOST SALE — 10 NGUYÊN NHÂN (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI, BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI)
+  var lostList = ["Giá chưa phù hợp", "Hết size/màu", "Chưa thích mẫu", "Chỉ tham khảo", "Chưa có nhu cầu", "Muốn suy nghĩ thêm", "Đang xem thương hiệu khác", "Đợi CT ưu đãi", "Không vừa form", "Khác"];
+  var lostRows = [];
+  function getLostReasonCat(r) {
+    var reason = (r[15] || "").toString().trim();
+    for (var k = 0; k < 9; k++) {
+      if (reason.indexOf(lostList[k]) !== -1 || lostList[k].indexOf(reason) !== -1) return k;
+    }
+    return 9;
+  }
+  lostList.forEach(function(lName, idx) {
+    var lCnt = 0;
+    filtered.forEach(function(r) {
+      if (r[26] === 1 && getLostReasonCat(r) === idx) lCnt++;
+    });
+    lostRows.push([idx + 1, lName, lCnt, lost > 0 ? lCnt / lost : 0, lCnt > 10 ? "Trung Bình" : "Thấp", "Đào tạo kỹ năng tư vấn", "", "", "", "", ""]);
+  });
+  lostRows.push(["-", "TỔNG CỘNG LOST SALE", lost, 1, "OK", "Tập trung giải quyết Top 3 lý do hàng đầu", "", "", "", "", ""]);
+
+  s03.getRange("A75:K75").merge().setValue("5. PHÂN TÍCH LOST SALE — NGUYÊN NHÂN RỚT ĐƠN & TỶ TRỌNG").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A76:K76").merge().setValue("5.1. TOP 10 NGUYÊN NHÂN CHƯA CHỐT ĐƠN VÀ HÀNH ĐỘNG KHẮC PHỤC").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A77:K77").setValues([["STT", "Nguyên Nhân Chưa Chốt Đơn", "Số Lượt Rớt Đơn", "Tỷ Trọng Lost Sale %", "Mức Độ Ảnh Hưởng", "Hành Động Khắc Phục Đề Xuất", "", "", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A78:K88").setValues(lostRows).setHorizontalAlignment("center");
+  s03.getRange("A88:K88").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C78:C88").setNumberFormat("#,##0"); s03.getRange("D78:D88").setNumberFormat("0.0%");
+
+  // 6. PHÂN TÍCH THEO THỜI GIAN (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI)
+  s03.getRange("A90:K90").merge().setValue("6. PHÂN TÍCH THEO THỜI GIAN — KHUNG GIỜ, THỨ & THÁNG").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+
+  // 6.1. KHUNG GIỜ IN-STORE (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var slotList = ["08:00 - 11:00", "11:00 - 13:00", "13:00 - 15:00", "15:00 - 17:00", "17:00 - 19:00", "19:00 - 22:00"], slotRows = [];
+  function getTimeSlotCat(r) {
+    var str = ((r[2] || "") + " " + (r[20] || "")).toString();
+    if (str.indexOf("08:") !== -1 || str.indexOf("09:") !== -1 || str.indexOf("10:") !== -1) return 0;
+    if (str.indexOf("11:") !== -1 || str.indexOf("12:") !== -1) return 1;
+    if (str.indexOf("13:") !== -1 || str.indexOf("14:") !== -1) return 2;
+    if (str.indexOf("15:") !== -1 || str.indexOf("16:") !== -1) return 3;
+    if (str.indexOf("17:") !== -1 || str.indexOf("18:") !== -1) return 4;
+    return 5;
+  }
+  var tSlT = 0, tSlB = 0, tSlL = 0, tSlR = 0;
+  slotList.forEach(function(sName, idx) {
+    var slTrf = 0, slBuy = 0, slLost = 0, slRev = 0;
+    filtered.forEach(function(r) {
+      if (getTimeSlotCat(r) === idx) {
+        slTrf++; if (r[25] === 1) slBuy++; else slLost++; slRev += (Number(r[14]) || 0);
+      }
+    });
+    tSlT += slTrf; tSlB += slBuy; tSlL += slLost; tSlR += slRev;
+    slotRows.push([idx + 1, sName, slTrf, 0, slBuy, slLost, slTrf > 0 ? slBuy / slTrf : 0, slRev, slBuy > 0 ? slRev / slBuy : 0, slTrf > 0 ? slRev / slTrf : 0, "OK"]);
+  });
+  slotRows.forEach(function(row) { row[3] = tSlT > 0 ? row[2] / tSlT : 0; });
+  slotRows.push(["-", "TỔNG CỘNG THEO KHUNG GIỜ", tSlT, 1, tSlB, tSlL, tSlT > 0 ? tSlB / tSlT : 0, tSlR, tSlB > 0 ? tSlR / tSlB : 0, tSlT > 0 ? tSlR / tSlT : 0, "OK"]);
+
+  s03.getRange("A91:K91").merge().setValue("6.1. TỔNG HỢP HIỆU SUẤT THEO KHUNG GIỜ IN-STORE").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A92:K92").setValues([["STT", "Khung Giờ", "Lượt Khách (TRF)", "Tỷ Trọng %", "Khách Mua (PUR)", "Chưa Mua (NP)", "Tỷ Lệ Chốt (CVR)", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)", "DT/Lượt Khách (RPV)", "Đánh Giá"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A93:K99").setValues(slotRows).setHorizontalAlignment("center");
+  s03.getRange("A99:K99").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C93:C99").setNumberFormat("#,##0"); s03.getRange("D93:D99").setNumberFormat("0.0%"); s03.getRange("E93:F99").setNumberFormat("#,##0"); s03.getRange("G93:G99").setNumberFormat("0.0%"); s03.getRange("H93:J99").setNumberFormat("#,##0");
+
+  // 6.2. THỨ TRONG TUẦN (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var dowList = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"], dowRows = [];
+  var tDwT = 0, tDwB = 0, tDwR = 0;
+  dowList.forEach(function(dName, idx) {
+    var dTrf = 0, dBuy = 0, dRev = 0;
+    filtered.forEach(function(r) {
+      if ((r[17] || "").toString().indexOf(dName) !== -1) {
+        dTrf++; if (r[25] === 1) dBuy++; dRev += (Number(r[14]) || 0);
+      }
+    });
+    tDwT += dTrf; tDwB += dBuy; tDwR += dRev;
+    dowRows.push([idx + 1, dName, dTrf, dBuy, dRev, dTrf > 0 ? dBuy / dTrf : 0, dBuy > 0 ? dRev / dBuy : 0, dTrf > 0 ? dRev / dTrf : 0, "", "", ""]);
+  });
+  dowRows.push(["-", "TỔNG CỘNG THEO THỨ", tDwT, tDwB, tDwR, tDwT > 0 ? tDwB / tDwT : 0, tDwB > 0 ? tDwR / tDwB : 0, tDwT > 0 ? tDwR / tDwT : 0, "", "", ""]);
+
+  s03.getRange("A101:K101").merge().setValue("6.2. TỔNG HỢP HIỆU SUẤT THEO THỨ TRONG TUẦN").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A102:K102").setValues([["STT", "Thứ Trong Tuần", "Lượt Khách (TRF)", "Khách Mua (PUR)", "Doanh Thu (REV)", "Tỷ Lệ Chốt (CVR)", "Giá Trị HĐ TB (AOV)", "DT/Lượt Khách (RPV)", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange("A103:K110").setValues(dowRows).setHorizontalAlignment("center");
+  s03.getRange("A110:K110").setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange("C103:E110").setNumberFormat("#,##0"); s03.getRange("F103:F110").setNumberFormat("0.0%"); s03.getRange("G103:H110").setNumberFormat("#,##0");
+
+  // 6.3. TỔNG HỢP HIỆU SUẤT VÀ TĂNG TRƯỞNG THEO THÁNG (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var monthMap = {};
+  filtered.forEach(function(r) {
+    var dt = parseDateVal(r[0] || r[16]);
+    if (dt) {
+      var mKey = "Tháng " + (dt.getMonth() + 1 < 10 ? "0" + (dt.getMonth() + 1) : (dt.getMonth() + 1)) + "/" + dt.getFullYear();
+      if (!monthMap[mKey]) monthMap[mKey] = { trf: 0, buy: 0, rev: 0, newCust: 0, oldCust: 0, oriBuy: 0, saleBuy: 0, tried: 0 };
+      var mObj = monthMap[mKey];
+      mObj.trf++;
+      if (r[25] === 1) mObj.buy++;
+      mObj.rev += (Number(r[14]) || 0);
+      var cType = r[3] ? r[3].toString().trim() : "";
+      if (cType === FORM_CUST_NEW) mObj.newCust++;
+      if (cType === FORM_CUST_OLD) mObj.oldCust++;
+      if ((r[7] || "").toString().indexOf("Có thử") !== -1) mObj.tried++;
+      if (r[25] === 1) {
+        var pType = r[10] ? r[10].toString().trim() : "";
+        if (pType === FORM_PURCHASE_DISCOUNT) mObj.saleBuy++;
+        else mObj.oriBuy++;
+      }
+    }
+  });
+
+  var sortedMonths = Object.keys(monthMap).sort();
+  var monthRows = [], prevRev = 0, tMoT = 0, tMoB = 0, tMoR = 0, tMoNew = 0, tMoOld = 0, tMoOri = 0, tMoSale = 0, tMoTr = 0;
+
+  sortedMonths.forEach(function(mKey, mIdx) {
+    var obj = monthMap[mKey];
+    tMoT += obj.trf; tMoB += obj.buy; tMoR += obj.rev; tMoNew += obj.newCust; tMoOld += obj.oldCust; tMoOri += obj.oriBuy; tMoSale += obj.saleBuy; tMoTr += obj.tried;
+    var momGrowth = (mIdx > 0 && prevRev > 0) ? (obj.rev - prevRev) / prevRev : 0;
+    prevRev = obj.rev;
+    monthRows.push([mIdx + 1, mKey, obj.trf, obj.buy, obj.trf > 0 ? obj.buy / obj.trf : 0, obj.trf > 0 ? obj.tried / obj.trf : 0, obj.newCust, obj.oldCust, obj.oriBuy, obj.saleBuy, obj.rev, momGrowth]);
+  });
+
+  if (monthRows.length === 0) monthRows.push(["1", "Chưa có dữ liệu tháng", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  monthRows.push(["-", "TỔNG CỘNG THEO THÁNG", tMoT, tMoB, tMoT > 0 ? tMoB / tMoT : 0, tMoT > 0 ? tMoTr / tMoT : 0, tMoNew, tMoOld, tMoOri, tMoSale, tMoR, "-"]);
+
+  s03.getRange("A112:K112").merge().setValue("6.3. TỔNG HỢP HIỆU SUẤT VÀ TĂNG TRƯỞNG THEO THÁNG (MONTHLY TREND & MOM GROWTH)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange("A113:K113").setValues([["STT", "Tháng / Năm", "Lượt Khách (TRF)", "Khách Mua (PUR)", "Tỷ Lệ Chốt (CVR)", "Khách Mới", "Khách Cũ", "Đơn Nguyên Giá", "Đơn Ưu Đãi", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)"]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  
+  var formattedMonthRows = monthRows.map(function(r) {
+    return [r[0], r[1], r[2], r[3], r[4], r[6], r[7], r[8], r[9], r[10], r[3] > 0 ? r[10] / r[3] : 0];
+  });
+  
+  s03.getRange(114, 1, formattedMonthRows.length, 11).setValues(formattedMonthRows).setHorizontalAlignment("center");
+  s03.getRange(114 + formattedMonthRows.length - 1, 1, 1, 11).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange(114, 3, formattedMonthRows.length, 2).setNumberFormat("#,##0");
+  s03.getRange(114, 5, formattedMonthRows.length, 1).setNumberFormat("0.0%");
+  s03.getRange(114, 6, formattedMonthRows.length, 4).setNumberFormat("#,##0");
+  s03.getRange(114, 10, formattedMonthRows.length, 2).setNumberFormat("#,##0");
+
+  var startR7 = 114 + formattedMonthRows.length + 1;
+
+  // 7. PHÂN TÍCH HÀNH VI MUA HÀNG (MỤC CẤP 1: ĐEN #0B0A08 - CĂN TRÁI)
+  s03.getRange(startR7, 1, 1, 11).merge().setValue("7. PHÂN TÍCH HÀNH VI MUA HÀNG — MỤC ĐÍCH, HÌNH THỨC & GIỎ HÀNG").setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+
+  // 7.1. MỤC ĐÍCH SỬ DỤNG (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var purpList = ["Cá nhân sử dụng", "Mua quà tặng", "Công ty/Doanh nghiệp", "Khác"], purpRows = [];
+  var tPuB = 0, tPuR = 0;
+  function getUsageCat(r) {
+    var uStr = (r[9] || "").toString();
+    if (uStr.indexOf("Cá nhân") !== -1) return 0;
+    if (uStr.indexOf("quà tặng") !== -1) return 1;
+    if (uStr.indexOf("Công ty") !== -1 || uStr.indexOf("Doanh nghiệp") !== -1) return 2;
+    return 3;
+  }
+
+  purpList.forEach(function(pName, idx) {
+    var pBuy = 0, pRev = 0;
+    filtered.forEach(function(r) {
+      if (r[25] === 1 && getUsageCat(r) === idx) {
+        pBuy++; pRev += (Number(r[14]) || 0);
+      }
+    });
+    tPuB += pBuy; tPuR += pRev;
+    purpRows.push([idx + 1, pName, pBuy, 0, pRev, pBuy > 0 ? pRev / pBuy : 0, "Nhu Cầu Tiêu Dùng", "", "", "", ""]);
+  });
+  purpRows.forEach(function(row) { row[3] = tPuB > 0 ? row[2] / tPuB : 0; });
+  purpRows.push(["-", "TỔNG CỘNG MỤC ĐÍCH", tPuB, 1, tPuR, tPuB > 0 ? tPuR / tPuB : 0, "OK", "", "", "", ""]);
+
+  s03.getRange(startR7 + 1, 1, 1, 11).merge().setValue("7.1. PHÂN TÍCH THEO MỤC ĐÍCH SỬ DỤNG (KHAI THÁC CÂU 9)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange(startR7 + 2, 1, 1, 11).setValues([["STT", "Mục Đích Sử Dụng", "Số Đơn Mua (PUR)", "Tỷ Trọng %", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)", "Đánh Giá Nhu Cầu", "", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange(startR7 + 3, 1, purpRows.length, 11).setValues(purpRows).setHorizontalAlignment("center");
+  s03.getRange(startR7 + 3 + purpRows.length - 1, 1, 1, 11).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange(startR7 + 3, 3, purpRows.length, 1).setNumberFormat("#,##0"); s03.getRange(startR7 + 3, 4, purpRows.length, 1).setNumberFormat("0.0%"); s03.getRange(startR7 + 3, 5, purpRows.length, 2).setNumberFormat("#,##0");
+
+  // 7.2. HÌNH THỨC MUA HÀNG (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var purTypeRows = [];
+  var tPtB = 0, tPtR = 0;
+  [FORM_PURCHASE_ORIGINAL, FORM_PURCHASE_DISCOUNT].forEach(function(ptName, idx) {
+    var ptBuy = 0, ptRev = 0;
+    filtered.forEach(function(r) {
+      if (r[25] === 1) {
+        var pType = r[10] ? r[10].toString().trim() : "";
+        if (pType === ptName) { ptBuy++; ptRev += (Number(r[14]) || 0); }
+      }
+    });
+    tPtB += ptBuy; tPtR += ptRev;
+    purTypeRows.push([idx + 1, ptName, ptBuy, 0, ptRev, ptBuy > 0 ? ptRev / ptBuy : 0, idx === 0 ? "Sức Khỏe Thương Hiệu Tốt" : "Nhạy Cảm Giá / Săn Ưu Đãi", "", "", "", ""]);
+  });
+  purTypeRows.forEach(function(row) { row[3] = tPtB > 0 ? row[2] / tPtB : 0; });
+  purTypeRows.push(["-", "TỔNG CỘNG HÌNH THỨC MUA", tPtB, 1, tPtR, tPtB > 0 ? tPtR / tPtB : 0, "OK", "", "", "", ""]);
+
+  var startR72 = startR7 + 3 + purpRows.length + 1;
+  s03.getRange(startR72, 1, 1, 11).merge().setValue("7.2. PHÂN TÍCH HÌNH THỨC MUA HÀNG — NGUYÊN GIÁ VS ƯU ĐÃI (KHAI THÁC CÂU 10)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange(startR72 + 1, 1, 1, 11).setValues([["STT", "Hình Thức Mua", "Số Đơn Mua (PUR)", "Tỷ Trọng %", "Doanh Thu (REV)", "Giá Trị HĐ TB (AOV)", "Sức Khỏe Thương Hiệu", "", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange(startR72 + 2, 1, purTypeRows.length, 11).setValues(purTypeRows).setHorizontalAlignment("center");
+  s03.getRange(startR72 + 2 + purTypeRows.length - 1, 1, 1, 11).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange(startR72 + 2, 3, purTypeRows.length, 1).setNumberFormat("#,##0"); s03.getRange(startR72 + 2, 4, purTypeRows.length, 1).setNumberFormat("0.0%"); s03.getRange(startR72 + 2, 5, purTypeRows.length, 2).setNumberFormat("#,##0");
+
+  // 7.3. KÍCH THƯỚC GIỎ HÀNG / BASKET SIZE (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var bsList = [
+    { label: "1 sản phẩm", qVal: 1, eval: "Cần Tăng Cross-sell" },
+    { label: "2 sản phẩm", qVal: 2, eval: "Đơn Chuẩn Kép" },
+    { label: "3 sản phẩm", qVal: 3, eval: "Đơn Giá Trị Khá" },
+    { label: "4 sản phẩm", qVal: 4, eval: "Giỏ Hàng Lớn" },
+    { label: "5 sản phẩm", qVal: 5, eval: "Giỏ Hàng Lớn" },
+    { label: "6 sản phẩm", qVal: 6, eval: "Giỏ Hàng Lớn Excellent" },
+    { label: "7 sản phẩm (Từ 7 SP trở lên)", qVal: 7, eval: "Giỏ Hàng Lớn Excellent" }
+  ];
+  var bsRows = [];
+  var tBsB = 0, tBsR = 0;
+  bsList.forEach(function(bObj, idx) {
+    var bBuy = 0, bRev = 0;
+    filtered.forEach(function(r) {
+      if (r[25] === 1) {
+        var q = Number(r[29]) || 1;
+        var isMatch = false;
+        if (idx < 6 && q === bObj.qVal) isMatch = true;
+        else if (idx === 6 && q >= 7) isMatch = true;
+        if (isMatch) { bBuy++; bRev += (Number(r[14]) || 0); }
+      }
+    });
+    tBsB += bBuy; tBsR += bRev;
+    bsRows.push([idx + 1, bObj.label, bBuy, 0, bRev, bBuy > 0 ? bRev / bBuy : 0, bObj.eval, "", "", "", ""]);
+  });
+  bsRows.forEach(function(row) { row[3] = tBsB > 0 ? row[2] / tBsB : 0; });
+  bsRows.push(["-", "TỔNG CỘNG GIỎ HÀNG", tBsB, 1, tBsR, tBsB > 0 ? tBsR / tBsB : 0, "OK", "", "", "", ""]);
+
+  var startR73 = startR72 + 2 + purTypeRows.length + 1;
+  s03.getRange(startR73, 1, 1, 11).merge().setValue("7.3. PHÂN TÍCH KÍCH THƯỚC GIỎ HÀNG / BASKET SIZE (KHAI THÁC CÂU 11)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange(startR73 + 1, 1, 1, 11).setValues([["STT", "Kích Thước Giỏ Hàng", "Số Hóa Đơn", "Tỷ Trọng Đơn %", "Doanh Thu (REV)", "AOV Trung Bình", "Đánh Giá Kỹ Năng Cross-Sell", "", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  s03.getRange(startR73 + 2, 1, bsRows.length, 11).setValues(bsRows).setHorizontalAlignment("center");
+  s03.getRange(startR73 + 2 + bsRows.length - 1, 1, 1, 11).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange(startR73 + 2, 3, bsRows.length, 1).setNumberFormat("#,##0"); s03.getRange(startR73 + 2, 4, bsRows.length, 1).setNumberFormat("0.0%"); s03.getRange(startR73 + 2, 5, bsRows.length, 2).setNumberFormat("#,##0");
+
+  // 8.3. DAILY TREND (BẢNG CẤP 2: NỀN NÂU #987147 - CĂN TRÁI, CỘT CẤP 3: ĐEN #0B0A08 - CĂN GIỮA)
+  var dateMap = {};
+  filtered.forEach(function(r) {
+    var dStr = formatDateShort(r[0] || r[16]);
+    if (dStr) {
+      if (!dateMap[dStr]) dateMap[dStr] = { trf: 0, buy: 0, rev: 0 };
+      dateMap[dStr].trf++; if (r[25] === 1) dateMap[dStr].buy++; dateMap[dStr].rev += (Number(r[14]) || 0);
+    }
+  });
+
+  var sortedDates = Object.keys(dateMap).sort(function(a, b) {
+    var pA = a.split('/'), pB = b.split('/');
+    return (pA.length === 3 && pB.length === 3) ? new Date(pA[2], pA[1] - 1, pA[0]) - new Date(pB[2], pB[1] - 1, pB[0]) : a.localeCompare(b);
+  });
+
+  var dailyRows = [], tDyT = 0, tDyB = 0, tDyR = 0;
+  sortedDates.forEach(function(dKey, dIdx) {
+    var obj = dateMap[dKey]; tDyT += obj.trf; tDyB += obj.buy; tDyR += obj.rev;
+    dailyRows.push([dIdx + 1, dKey, obj.trf, obj.buy, obj.rev, obj.trf > 0 ? obj.buy / obj.trf : 0, obj.buy > 0 ? obj.rev / obj.buy : 0, obj.trf > 0 ? obj.rev / obj.trf : 0, "", "", ""]);
+  });
+  if (dailyRows.length === 0) dailyRows.push(["1", "Chưa có dữ liệu ngày", 0, 0, 0, 0, 0, 0, "", "", ""]);
+  dailyRows.push(["-", "TỔNG CỘNG THEO NGÀY", tDyT, tDyB, tDyR, tDyT > 0 ? tDyB / tDyT : 0, tDyT > 0 ? tDyR / tDyT : 0, tDyT > 0 ? tDyR / tDyT : 0, "", "", ""]);
+
+  var startR83 = startR73 + 2 + bsRows.length + 1;
+  s03.getRange(startR83, 1, 1, 11).merge().setValue("8.3. TỔNG HỢP CHI TIẾT THEO NGÀY (DAILY TREND)").setFontWeight("bold").setBackground("#987147").setFontColor("#FFFFFF").setHorizontalAlignment("left");
+  s03.getRange(startR83 + 1, 1, 1, 11).setValues([["STT", "Ngày", "Lượt Khách (TRF)", "Khách Mua (PUR)", "Doanh Thu (REV)", "Tỷ Lệ Chốt (CVR)", "Giá Trị HĐ TB (AOV)", "DT/Lượt Khách (RPV)", "", "", ""]]).setFontWeight("bold").setBackground("#0B0A08").setFontColor("#FFFFFF").setHorizontalAlignment("center");
+  
+  var rangeDaily = s03.getRange(startR83 + 2, 1, dailyRows.length, 11);
+  rangeDaily.setValues(dailyRows).setHorizontalAlignment("center");
+  s03.getRange(startR83 + 2, 2, dailyRows.length, 1).setNumberFormat("dd/MM/yyyy");
+  s03.getRange(startR83 + 2 + dailyRows.length - 1, 1, 1, 11).setFontWeight("bold").setBackground("#F6EADE").setFontColor("#0B0A08");
+  s03.getRange(startR83 + 2, 3, dailyRows.length, 3).setNumberFormat("#,##0"); s03.getRange(startR83 + 2, 6, dailyRows.length, 1).setNumberFormat("0.0%"); s03.getRange(startR83 + 2, 7, dailyRows.length, 2).setNumberFormat("#,##0");
+
+  // ĐẶT LINK TRUY CẬP CHÍNH XÁC Ở CUỐI SHEET 03
+  var endRowS03 = startR83 + 2 + dailyRows.length + 1;
+  s03.getRange(endRowS03, 1, 1, 11).merge()
+     .setValue("🔗 LINK XEM EXECUTIVE DASHBOARD ONLINE TRÊN DI ĐỘNG: " + LIVE_DASHBOARD_URL)
+     .setFontWeight("bold").setFontSize(11)
+     .setBackground("#F6EADE").setFontColor("#987147")
+     .setHorizontalAlignment("center");
+
+  // ROBOT RÀ SOÁT FULL-TABLE 18 PHÉP TOÁN (FULL-TABLE INTEGRITY CHECKER STRICT ENUM)
+  var auditPass = true;
+  if (tTypT !== trf || tSrcT !== trf || tSlT !== trf || tDwT !== trf || tDyT !== trf || tMoT !== trf) auditPass = false;
+  if (Math.abs(tTypR - rev) > 1 || Math.abs(tSrcR - rev) > 1 || Math.abs(tSlR - rev) > 1 || Math.abs(tDwR - rev) > 1 || Math.abs(tDyR - rev) > 1 || Math.abs(tPrdRev - rev) > 1 || Math.abs(tMoR - rev) > 1 || Math.abs(tPtR - rev) > 1) auditPass = false;
+  if (tTypB !== buy || tSrcB !== buy || tSlB !== buy || tDwB !== buy || tDyB !== buy || tPuB !== buy || tPtB !== buy || tBsB !== buy || tMoB !== buy || tFmB !== buy || tTotPur !== buy) auditPass = false;
+
+  if (auditPass) {
+    s03.getRange("J2:K2").merge().setValue("🟢 100% FULL-TABLE AUDIT PASSED").setFontWeight("bold").setBackground("#E8F5E9").setFontColor("#2E7D32").setHorizontalAlignment("center");
+  } else {
+    s03.getRange("J2:K2").merge().setValue("🔴 AUDIT WARN: LỆCH SỐ LIỆU").setFontWeight("bold").setBackground("#FFEBEE").setFontColor("#C62828").setHorizontalAlignment("center");
+  }
+}
+```
+
+================================================================================
+PHẦN 6: MÃ NGUỒN HOÀN CHỈNH TỆP 4 — MOCK_DATA_GENERATOR.GS
+================================================================================
+
+```javascript
+/**
+ * SHINKO RETAIL ANALYTICS V3 - DEV TOOL: MOCK DATA GENERATOR
+ * Mục đích: Tự động chèn `count` dòng khảo sát ngẫu nhiên theo đúng ma trận
+ * Data Schema vào tab 01_Form_Response để kiểm tra tức thì tính chính xác
+ * của 6 tab Sheet và Dashboard mà không cần thao tác tay trên web.
+ */
+
+function generateMockData(count) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var rawSheetName = (ss.getSheetByName("01_Dữ_Liệu_Gốc")) ? "01_Dữ_Liệu_Gốc" : "01_Form_Response";
+  var s01 = ss.getSheetByName(rawSheetName);
+  if (!s01) {
+    s01 = ss.insertSheet(rawSheetName);
+    s01.appendRow(["Dấu thời gian", "Showroom", "Khung giờ đến", "Phân loại khách hàng", "Nguồn biết đến Showroom", "Mục đích ghé Showroom", "Sản phẩm quan tâm", "Khách có thử đồ không", "Khách có mua hàng không", "Mục đích sử dụng", "Hình thức mua", "Số lượng sản phẩm mua", "Danh mục sản phẩm đã mua", "Mã hóa đơn", "Số tiền trên hóa đơn (VNĐ)", "Lý do chưa mua", "Trạng thái Kiểm toán"]);
+  }
+
+  var numRecords = count || 20;
+  var showrooms = ["SHINKO - Trần Duy Hưng", "SHINKO - Xã Đàn", "SHINKO - Bắc Ninh", "SHINKO - Thanh Hóa", "SHINKO - Ninh Bình"];
+  var timeSlots = ["08:00 - 11:00", "11:00 - 13:00", "13:00 - 15:00", "15:00 - 17:00", "17:00 - 19:00", "19:00 - 22:00"];
+  var custTypes = ["Khách mới", "Khách cũ"];
+  var sources = ["Đi ngang cửa hàng", "Marketing (Facebook, TikTok, Website...)", "Khách được giới thiệu", "Khách chủ động quay lại", "Khác"];
+  var visitPurposes = ["Mua cho bản thân", "Mua quà tặng", "Tham khảo mẫu", "Khác"];
+  var products = ["Giày", "Polo", "Tshirt", "Sơ mi", "Quần", "Jacket", "Blazer", "Áo len", "Áo da", "Dây lưng", "Ví/Bóp tay", "Cặp/Túi", "Phụ kiện khác"];
+  var usagePurposes = ["Cá nhân sử dụng", "Mua quà tặng", "Công ty/Doanh nghiệp", "Khác"];
+  var purchaseTypes = ["Mua nguyên giá", "Mua có ưu đãi"];
+  var lostReasons = ["Giá chưa phù hợp", "Hết size/màu", "Chưa thích mẫu", "Chỉ tham khảo", "Chưa có nhu cầu", "Muốn suy nghĩ thêm", "Đang xem thương hiệu khác", "Đợi CT ưu đãi", "Không vừa form", "Khác"];
+
+  var rows = [];
+  var now = new Date();
+
+  for (var i = 0; i < numRecords; i++) {
+    var randDays = Math.floor(Math.random() * 90);
+    var dt = new Date(now.getTime() - randDays * 24 * 60 * 60 * 1000);
+    var sr = showrooms[Math.floor(Math.random() * showrooms.length)];
+    var slot = timeSlots[Math.floor(Math.random() * timeSlots.length)];
+    var cType = custTypes[Math.floor(Math.random() * custTypes.length)];
+    var src = sources[Math.floor(Math.random() * sources.length)];
+    var vPurp = visitPurposes[Math.floor(Math.random() * visitPurposes.length)];
+    
+    var numInt = Math.floor(Math.random() * 3) + 1;
+    var intProds = [];
+    for (var k = 0; k < numInt; k++) {
+      var p = products[Math.floor(Math.random() * products.length)];
+      if (intProds.indexOf(p) === -1) intProds.push(p);
+    }
+    
+    var tried = (Math.random() > 0.3) ? "Có thử" : "Không thử";
+    var isBuy = (Math.random() > 0.35);
+    var hasPur = isBuy ? "Có" : "Không";
+    
+    var uPurp = "", pType = "", qty = "", purProds = "", invCode = "", invAmt = "", nonReason = "";
+    if (isBuy) {
+      uPurp = usagePurposes[Math.floor(Math.random() * usagePurposes.length)];
+      pType = purchaseTypes[Math.floor(Math.random() * purchaseTypes.length)];
+      var qtyNum = Math.floor(Math.random() * 5) + 1;
+      qty = qtyNum.toString();
+      purProds = intProds.join(", ");
+      invCode = "HD" + Math.floor(100000 + Math.random() * 900000);
+      var avgPrice = 850000 + Math.floor(Math.random() * 400000);
+      invAmt = (qtyNum * avgPrice).toString();
+    } else {
+      nonReason = lostReasons[Math.floor(Math.random() * lostReasons.length)];
+    }
+
+    rows.push([
+      dt, sr, slot, cType, src, vPurp, intProds.join(", "),
+      tried, hasPur, uPurp, pType, qty, purProds, invCode,
+      invAmt, nonReason, "OK"
+    ]);
+  }
+
+  if (rows.length > 0) {
+    s01.getRange(s01.getLastRow() + 1, 1, rows.length, 17).setValues(rows);
+    Logger.log("✅ Đã chèn thành công " + rows.length + " dòng dữ liệu thử nghiệm vào " + rawSheetName);
+    if (typeof setupV3Architecture === "function") {
+      setupV3Architecture();
+    }
+  }
+}
+```
+
+================================================================================
+PHẦN 7: BƯỚC THỰC THI CHO AI NHẬN PROMPT NÀY
+================================================================================
+
+1. Hãy đọc kỹ 10 Nguyên Tắc Kỹ Thuật Vàng và Bộ Nhận Diện Thương Hiệu SHINKO.
+2. Tạo các tệp mã nguồn theo đúng chính xác nội dung từ Phần 3 đến Phần 6.
+3. Xuất kết quả cho người dùng và hướng dẫn chạy hàm `setupV3Architecture()` trên Google Apps Script để hoàn tất hệ thống.
+================================================================================

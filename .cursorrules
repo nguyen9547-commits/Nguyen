@@ -1,0 +1,64 @@
+# PROJECT RULES & CONTEXT: SHINKO SHOWROOM SURVEY (REBRANDING 2025 - ARCHITECTURE V3)
+
+Dự án này là Web App khảo sát khách hàng đa đại lý chuẩn thương hiệu **SHINKO (EST. 2015)** kết nối tự động với Google Sheets theo chuẩn **Kiến trúc 6 Lớp (SHINKO Retail Analytics V3 Architecture)**.
+
+---
+
+## 1. Kiến Trúc 6 Lớp Chuẩn (SHINKO Retail Analytics V3)
+
+Mọi xử lý dữ liệu BẮT BUỘC tuân thủ luồng dữ liệu 1 chiều qua 6 Module:
+
+```mermaid
+flowchart TD
+    Form[Web App / Form Khảo sát] --> M01[01_Form_Response]
+    M01 -->|Đồng bộ & Bóc tách| M02[02_Data_Processing]
+    M02 -->|Kho dữ liệu chuẩn hóa| M03[03_KPI_Engine]
+    M03 -->|Tính toán KPI: REV, CVR, UPT, AOV, RPV| M04[04_Dashboard]
+    M05[05_Lookup] -->|Cấp danh mục chuẩn| M02
+    M06[06_Data_Dictionary] -->|Định nghĩa KPI| M03
+    M04 --> Board[Ban Giám Đốc / Quản Lý / AI Assistant]
+```
+
+### Nguyên Tắc Thiết Kế Hàng Đầu:
+1. **"Dữ liệu chỉ nhập một lần – xử lý một lần – sử dụng nhiều lần."**
+2. **`01_Form_Response` là dữ liệu gốc**: CẤM sửa/xóa dữ liệu, cấm chèn cột, cấm chèn công thức.
+3. **`02_Data_Processing` làm Data Warehouse**: Phân rã ngày/giờ/thứ, tách danh mục sản phẩm (`Giày`, `Polo`, `Sơ mi`...), tạo các cột trợ lý Boolean (Traffic, Có mua, Khách mới/cũ, Marketing/Walk-in).
+4. **`03_KPI_Engine` tập trung công thức**: Tính toán toàn bộ chỉ số KPI (REV, CVR, CVR_NEW, CVR_OLD, UPT, RPV...). Không đọc dữ liệu từ `01_Form_Response`.
+5. **`04_Dashboard` chỉ hiển thị**: Đọc kết quả từ `03_KPI_Engine`. Không trực tiếp đặt công thức SUM/COUNT để giữ tốc độ tải siêu nhanh.
+6. **`05_Lookup`**: Chứa danh mục chuẩn Showroom, Sản phẩm, Size, Nguồn khách, Lý do chưa mua.
+7. **`06_Data_Dictionary`**: Lưu định nghĩa, công thức và ký hiệu KPI.
+
+---
+
+## 2. Bộ Nhận Diện Thương Hiệu (SHINKO Rebranding 2025)
+
+Mọi thay đổi giao diện UI/UX BẮT BUỘC tuân thủ nghiêm ngặt bảng màu và typography thương hiệu SHINKO:
+
+### Bảng màu thương hiệu (Brand Colors)
+- **Charred Earth (`#0B0A08`)**: Màu đen trầm - đại diện cho chiều sâu & sự bền vững. Dùng cho tiêu đề, chữ chính và nút bấm hoàn tất.
+- **Toasted Umber (`#987147`)**: Gam màu nâu ấm chủ đạo (da thuộc & gỗ). Dùng cho Logo, thương hiệu, nút hành động chính, viền active.
+- **Ivory Dust (`#F6EADE`)**: Tông trắng ngà nhẹ nhàng, thanh lịch. Dùng cho nền thẻ chọn (Option card), huy hiệu phần (Badge), bước chưa hoàn thành.
+- **Pure White (`#FFFFFF`)**: Sắc trắng thuần khiết cho khung chứa chính (Container card).
+- **Background Page (`#F5F3EF`)**: Tông nền trang nhã, ấm áp.
+
+### Font chữ thương hiệu (Brand Typography)
+- **Header & Branding Font**: `Cormorant Garamond` (Serif cao cấp, sang trọng).
+- **Body & Form Font**: `Plus Jakarta Sans` (Sans-serif hiện đại, tối ưu hiển thị di động).
+
+---
+
+## 3. Cấu Trúc Mã Nguồn (Project Structure)
+
+- `index.html`: Giao diện khảo sát 6 phần (Sections), 5 bước Stepper tiến trình, gắn logo SHINKO EST. 2015.
+- `styles.css`: Hệ thống CSS Token thiết kế theo bộ nhận diện thương hiệu SHINKO 2025, tối ưu 100% cho màn hình di động/tablet tại Showroom.
+- `app.js`: Xử lý logic ứng dụng (Tự động điền Showroom `?showroom=...`, phân nhánh logic tại Câu 8, validate dữ liệu và gửi POST JSON).
+- `google_apps_script.gs`: Mã nguồn Google Apps Script tự động duy trì 6 Module Kiến trúc V3.
+- `KhaoSatKhachHang.zip`: File đóng gói sẵn trọn bộ mã nguồn + rules + skills để triển khai nhanh.
+
+---
+
+## 4. Nguyên Tắc Cho AI Khi Chỉnh Sửa DỰ ÁN này
+
+1. **Tuân thủ Kiến trúc V3**: Không bỏ bớt các module trong `google_apps_script.gs`.
+2. **Tuân thủ bộ nhận diện SHINKO 2025**: Luôn sử dụng đúng các mã màu `Charred Earth #0B0A08`, `Toasted Umber #987147`, `Ivory Dust #F6EADE`, `Pure White #FFFFFF`.
+3. **CORS và Google Apps Script Redirect**: Kết nối POST tới Google Apps Script bắt buộc phải có mode `no-cors` hoặc theo dõi redirect `302`.

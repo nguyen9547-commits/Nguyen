@@ -1,0 +1,531 @@
+/* SHINKO REBRANDING 2025 - BRAND COLOR SYSTEM */
+:root {
+    --charred-earth: #0B0A08;  /* Màu đen trầm - đại diện cho chiều sâu & bền vững */
+    --toasted-umber: #987147;  /* Gam màu nâu ấm chủ đạo - chất liệu da thuộc & gỗ */
+    --toasted-umber-hover: #825e37;
+    --ivory-dust: #F6EADE;     /* Tông trắng ngà nhẹ nhàng, thanh lịch & cao cấp */
+    --pure-white: #FFFFFF;     /* Sắc trắng thuần khiết */
+    
+    --bg-page: #F5F3EF;        /* Nền trang nhã ấm áp */
+    --text-primary: #0B0A08;
+    --text-secondary: #5C5247;
+    --text-muted: #9E9387;
+    --border-color: #E6DED4;
+    
+    --success-color: #2E7D32;
+    --danger-color: #C62828;
+    
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    
+    --shadow-soft: 0 10px 30px rgba(11, 10, 8, 0.04), 0 2px 8px rgba(11, 10, 8, 0.02);
+    --shadow-hover: 0 14px 35px rgba(152, 113, 71, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 680px;
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 40px 32px;
+    position: relative;
+    border: 1px solid rgba(230, 222, 212, 0.6);
+}
+
+/* Header & Brand Identity */
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.brand-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.logo-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--toasted-umber);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.logo-sub {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: var(--toasted-umber);
+    opacity: 0.9;
+}
+
+.header-divider {
+    width: 48px;
+    height: 1.5px;
+    background-color: var(--toasted-umber);
+    margin: 16px auto 20px;
+    opacity: 0.4;
+}
+
+.header h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--charred-earth);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.header .subtitle {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Stepper */
+.stepper-wrapper {
+    margin-bottom: 36px;
+    padding: 0 4px;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ivory-dust);
+    color: var(--text-secondary);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.step-item.active .step-circle {
+    background: var(--toasted-umber);
+    color: var(--pure-white);
+    border-color: var(--toasted-umber);
+    box-shadow: 0 0 0 4px rgba(152, 113, 71, 0.18);
+}
+
+.step-item.active .step-label {
+    color: var(--toasted-umber);
+    font-weight: 700;
+}
+
+.step-item.completed .step-circle {
+    background: var(--charred-earth);
+    color: var(--ivory-dust);
+    border-color: var(--charred-earth);
+}
+
+.step-line {
+    flex: 1;
+    height: 1.5px;
+    background: var(--border-color);
+    margin: 0 4px;
+    margin-bottom: 22px;
+}
+
+/* Form Section */
+.form-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--ivory-dust);
+    color: var(--toasted-umber);
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.section-badge.success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.section-badge.danger {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.section-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--charred-earth);
+    letter-spacing: 0.02em;
+}
+
+/* Form Controls */
+.form-group {
+    margin-bottom: 26px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--charred-earth);
+    margin-bottom: 10px;
+}
+
+.required-label::after {
+    content: " *";
+    color: var(--toasted-umber);
+}
+
+.hint {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--charred-earth);
+    background-color: var(--pure-white);
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    border-color: var(--toasted-umber);
+    box-shadow: 0 0 0 3.5px rgba(152, 113, 71, 0.15);
+}
+
+/* Options Grid */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 12px;
+}
+
+.options-grid.flex-col {
+    grid-template-columns: 1fr;
+}
+
+.option-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--pure-white);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.option-card:hover {
+    border-color: var(--toasted-umber);
+    background: var(--ivory-dust);
+}
+
+.option-card input[type="radio"],
+.option-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.card-content {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+}
+
+.option-card input:checked + .card-content {
+    color: var(--charred-earth);
+    font-weight: 700;
+}
+
+.option-card:has(input:checked) {
+    border-color: var(--toasted-umber);
+    background-color: var(--ivory-dust);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Highlight Cards for Question 8 */
+.highlight-card.green:has(input:checked) {
+    border-color: var(--toasted-umber);
+    background-color: #F8F4EE;
+}
+
+.highlight-card.green input:checked + .card-content {
+    color: var(--toasted-umber);
+}
+
+.highlight-card.red:has(input:checked) {
+    border-color: var(--charred-earth);
+    background-color: #F2EFEA;
+}
+
+.highlight-card.red input:checked + .card-content {
+    color: var(--charred-earth);
+}
+
+.highlight-card small {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    gap: 14px;
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.03em;
+}
+
+.btn-primary {
+    background: var(--toasted-umber);
+    color: var(--pure-white);
+}
+
+.btn-primary:hover {
+    background: var(--toasted-umber-hover);
+    box-shadow: 0 4px 14px rgba(152, 113, 71, 0.3);
+}
+
+.btn-secondary {
+    background: var(--ivory-dust);
+    color: var(--charred-earth);
+}
+
+.btn-secondary:hover {
+    background: #ebdcd0;
+}
+
+.btn-success {
+    background: var(--charred-earth);
+    color: var(--ivory-dust);
+    width: 100%;
+}
+
+.btn-success:hover {
+    background: #1a1815;
+    box-shadow: 0 4px 14px rgba(11, 10, 8, 0.25);
+}
+
+/* Modal & Loading Overlay */
+.overlay, .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 10, 8, 0.65);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    flex-direction: column;
+    gap: 16px;
+    color: #fff;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.spinner {
+    width: 44px;
+    height: 44px;
+    border: 3.5px solid rgba(246, 234, 222, 0.3);
+    border-top-color: var(--toasted-umber);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.modal-content {
+    background: var(--pure-white);
+    color: var(--charred-earth);
+    padding: 36px 28px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(11, 10, 8, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+/* CUSTOM SHINKO BRANDED MODAL */
+.shinko-modal-content {
+    border: 2px solid var(--toasted-umber) !important;
+    background: var(--pure-white) !important;
+    box-shadow: 0 24px 48px rgba(11, 10, 8, 0.4) !important;
+    padding: 32px 24px !important;
+}
+
+.shinko-modal-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.shinko-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--toasted-umber);
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.shinko-modal-msg {
+    font-size: 14px;
+    color: var(--charred-earth);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    white-space: pre-line;
+    font-weight: 500;
+}
+
+.shinko-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.shinko-modal-actions button {
+    flex: 1;
+    padding: 12px 18px;
+}
+
+.success-icon {
+    font-size: 44px;
+    margin-bottom: 12px;
+    color: var(--toasted-umber);
+}
+
+.modal-content h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--charred-earth);
+}
+
+.modal-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+/* DYNAMIC EXCHANGE SUB-SECTION STYLES */
+.exchange-sub-box {
+    background: #FAF8F5;
+    border: 1.5px dashed var(--toasted-umber);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.exchange-upgrade-box {
+    background: var(--pure-white);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-top: 14px;
+}

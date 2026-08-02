@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# System & AI Agent Cache/Backups
+.backups/
+.gemini/
+.vscode/
+.idea/
+
+# Temporary logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

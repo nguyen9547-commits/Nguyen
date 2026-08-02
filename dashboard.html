@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHINKO - Executive Business Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* BRAND COLOR TOKENS (SUPPORTING DARK & LIGHT THEMES) */
+        :root {
+            --charred-earth: #0B0A08;
+            --toasted-umber: #987147;
+            --toasted-umber-hover: #7b5a36;
+            --ivory-dust: #F6EADE;
+            --bg-page: #12110E;
+            --card-bg: #1A1815;
+            --card-border: #2D2924;
+            --header-bg: #0B0A08;
+            --text-primary: #F6EADE;
+            --text-secondary: #A0988E;
+            --table-header-bg: #12110E;
+            --accent-green: #2E7D32;
+            --accent-red: #C62828;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --charred-earth: #FFFFFF;
+            --toasted-umber: #987147;
+            --toasted-umber-hover: #7b5a36;
+            --ivory-dust: #0B0A08;
+            --bg-page: #F5F3EF;
+            --card-bg: #FFFFFF;
+            --card-border: #E5DFC9;
+            --header-bg: #FAF6F0;
+            --text-primary: #0B0A08;
+            --text-secondary: #666056;
+            --table-header-bg: #F6EADE;
+            --shadow: rgba(152, 113, 71, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            width: 240px;
+            background-color: var(--header-bg);
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease;
+        }
+
+        .brand-logo {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .brand-logo h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: var(--toasted-umber);
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .brand-logo p {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover {
+            background-color: rgba(152, 113, 71, 0.15);
+            color: var(--toasted-umber);
+        }
+
+        .nav-item.active a {
+            background: linear-gradient(135deg, var(--toasted-umber) 0%, #7b5a36 100%);
+            color: #FFFFFF;
+            font-weight: 600;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .brand-footer {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .brand-footer h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: var(--toasted-umber);
+            letter-spacing: 1px;
+        }
+
+        .brand-footer p {
+            font-size: 9px;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            margin-top: 2px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            margin-left: 240px;
+            flex: 1;
+            padding: 24px;
+            max-width: calc(100vw - 240px);
+        }
+
+        /* HEADER BANNER */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .header-title h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--toasted-umber);
+            letter-spacing: 1px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-item i {
+            color: var(--toasted-umber);
+        }
+
+        /* NÚT ĐỔI GIAO DIỆN SÁNG / TỐI */
+        .theme-toggle-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--toasted-umber);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--toasted-umber);
+            color: #FFFFFF;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .filter-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-page);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .filter-control label {
+            font-size: 12px;
+            color: var(--toasted-umber);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-control input, .filter-control select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-control select option {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .filter-badge {
+            background-color: rgba(152, 113, 71, 0.15);
+            border: 1px solid var(--toasted-umber);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-badge i {
+            color: var(--toasted-umber);
+        }
+
+        /* KPI SCORECARD GRID (9 CARDS) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--toasted-umber);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .kpi-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-icon {
+            color: var(--toasted-umber);
+            font-size: 14px;
+        }
+
+        .kpi-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .kpi-subtext {
+            font-size: 10.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sub-up { color: var(--accent-green); }
+        .sub-down { color: var(--accent-red); }
+
+        /* SECTION TIÊU ĐỀ PHÂN HỆ */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--toasted-umber);
+        }
+
+        .section-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: var(--toasted-umber);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* GRID LAYOUTS FOR CHARTS & TABLES */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .box-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chart-container {
+            position: relative;
+            flex: 1;
+            min-height: 220px;
+            width: 100%;
+        }
+
+        /* TABLES STYLING */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th {
+            background-color: var(--table-header-bg);
+            color: var(--toasted-umber);
+            font-weight: 600;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .data-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-primary);
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(152, 113, 71, 0.08);
+        }
+
+        /* LOST SALE METRIC BLOCK */
+        .lost-sale-card {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background-color: var(--bg-page);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .lost-metric-item i {
+            font-size: 20px;
+            color: var(--toasted-umber);
+            margin-bottom: 6px;
+        }
+
+        .lost-metric-item .val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .lost-metric-item .lbl {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+
+        /* FOOTER */
+        .dashboard-footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--card-border);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-logo">
+                <h1>SHINKO</h1>
+                <p>Retail Analytics</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-tab="tong-quan">
+                    <a href="#sec-tong-quan"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a>
+                </li>
+                <li class="nav-item" data-tab="showroom">
+                    <a href="#sec-showroom"><i class="fa-solid fa-store"></i> Showroom</a>
+                </li>
+                <li class="nav-item" data-tab="san-pham">
+                    <a href="#sec-san-pham"><i class="fa-solid fa-shirt"></i> Sản phẩm</a>
+                </li>
+                <li class="nav-item" data-tab="khach-hang">
+                    <a href="#sec-khach-hang"><i class="fa-solid fa-users"></i> Khách hàng</a>
+                </li>
+                <li class="nav-item" data-tab="lost-sale">
+                    <a href="#sec-lost-sale"><i class="fa-solid fa-triangle-exclamation"></i> Lost Sale</a>
+                </li>
+                <li class="nav-item" data-tab="thoi-gian">
+                    <a href="#sec-thoi-gian"><i class="fa-solid fa-clock"></i> Thời gian</a>
+                </li>
+                <li class="nav-item" data-tab="hanh-vi">
+                    <a href="#sec-hanh-vi"><i class="fa-solid fa-cart-shopping"></i> Hành vi mua</a>
+                </li>
+            </ul>
+        </div>
+        <div class="brand-footer">
+            <h2>SHINKO</h2>
+            <p>STYLE • QUALITY • CONFIDENCE</p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+
+        <!-- HEADER BANNER -->
+        <header class="dashboard-header">
+            <div class="header-title">
+                <h2>BUSINESS DASHBOARD</h2>
+                <p>TỔNG QUAN HIỆU QUẢ KINH DOANH HỆ THỐNG SHOWROOM SHINKO</p>
+            </div>
+            <div class="header-right">
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <i class="fa-regular fa-clock"></i>
+                        <span>Cập nhật: <strong id="lastUpdatedTime">26/07/2026 15:45</strong></span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Dữ liệu: <strong>03_Bảng_Tính_KPI</strong></span>
+                    </div>
+                </div>
+
+                <!-- NÚT CHỌN CHẾ ĐỘ SÁNG / TỐI & TỰ ĐỘNG LÀM MỚI -->
+                <button id="autoRefreshBtn" class="theme-toggle-btn" onclick="toggleAutoRefresh()" style="margin-right: 8px;">
+                    <i class="fa-solid fa-arrows-rotate"></i> <span id="autoRefreshLabel">Tự động làm mới: Bật (60s)</span>
+                </button>
+                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon"></i> <span id="themeToggleLabel">Nền Tối</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- FILTER BAR -->
+        <section class="filter-bar">
+            <div class="filter-group">
+                <div class="filter-control">
+                    <label for="startDate"><i class="fa-regular fa-calendar"></i> Từ ngày</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="filter-control">
+                    <label for="endDate"><i class="fa-regular fa-calendar-check"></i> Đến ngày</label>
+                    <input type="date" id="endDate">
+                </div>
+                <div class="filter-control">
+                    <label for="showroomSelect"><i class="fa-solid fa-store"></i> Showroom</label>
+                    <select id="showroomSelect">
+                        <option value="Toàn Hệ Thống">Toàn Hệ Thống</option>
+                        <option value="Trần Duy Hưng">Trần Duy Hưng</option>
+                        <option value="Xã Đàn">Xã Đàn</option>
+                        <option value="Bắc Ninh">Bắc Ninh</option>
+                        <option value="Thanh Hóa">Thanh Hóa</option>
+                        <option value="Ninh Bình">Ninh Bình</option>
+                    </select>
+                </div>
+                <div class="filter-control">
+                    <label for="sourceSelect"><i class="fa-solid fa-users"></i> Nguồn khách</label>
+                    <select id="sourceSelect">
+                        <option value="Tất cả">Tất cả nguồn khách</option>
+                        <option value="Đi ngang">Đi ngang cửa hàng</option>
+                        <option value="Marketing">Marketing (Facebook, TikTok...)</option>
+                        <option value="giới thiệu">Khách được giới thiệu</option>
+                        <option value="quay lại">Khách chủ động quay lại</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-badge">
+                <i class="fa-solid fa-filter"></i>
+                <span id="filterSummaryBadge">ÁP DỤNG: Toàn Hệ Thống | Tất cả nguồn khách | Từ 01/07/2026 đến 27/07/2026</span>
+            </div>
+        </section>
+
+        <!-- PHẦN 1: TỔNG QUAN KPI (SCORECARD CARDS) -->
+        <section id="sec-tong-quan">
+            <div class="section-header">
+                <i class="fa-solid fa-chart-pie" style="color: var(--toasted-umber);"></i>
+                <h3>1. BỘ CHỈ SỐ KPI KINH DOANH CHÍNH</h3>
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Lượt khách</span>
+                        <i class="fa-solid fa-users kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiTraffic">0</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Theo dõi thời gian thực</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Khách mua</span>
+                        <i class="fa-solid fa-cart-shopping kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiPurchases">0</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Theo dõi thời gian thực</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Khách chưa mua</span>
+                        <i class="fa-solid fa-user-xmark kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiLost">0</div>
+                    <div class="kpi-subtext sub-down"><i class="fa-solid fa-caret-down"></i> Lost Sale kiểm soát</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tỷ lệ chốt đơn</span>
+                        <i class="fa-solid fa-bullseye kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiCVR">0.0%</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Tỷ lệ chốt CVR%</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Doanh thu (VNĐ)</span>
+                        <i class="fa-solid fa-money-bill-wave kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiRevenue">0đ</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Tổng doanh thu hệ thống</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Số hóa đơn</span>
+                        <i class="fa-solid fa-file-invoice kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiInvoices">0</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Tổng số đơn chốt</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Giá trị HĐ TB</span>
+                        <i class="fa-solid fa-receipt kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiAOV">0đ</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Giá trị đơn trung bình</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Số SP / HĐ</span>
+                        <i class="fa-solid fa-boxes-stacked kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiUPT">0.00</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Kích thước giỏ UPT</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">DT / Lượt khách</span>
+                        <i class="fa-solid fa-chart-line kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="kpiRPV">0đ</div>
+                    <div class="kpi-subtext sub-up"><i class="fa-solid fa-caret-up"></i> Doanh thu / lượt khách</div>
+                </div>
+            </div>
+
+            <!-- XU HƯỚNG NGÀY -->
+            <div class="dashboard-box" style="margin-bottom: 24px;">
+                <div class="box-title">
+                    <span>XU HƯỚNG DOANH THU THEO NGÀY (VNĐ)</span>
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="chart-container" style="min-height: 240px;">
+                    <canvas id="dailyTrendChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 2: PHÂN TÍCH SHOWROOM -->
+        <section id="sec-showroom">
+            <div class="section-header">
+                <i class="fa-solid fa-store" style="color: var(--toasted-umber);"></i>
+                <h3>2. PHÂN TÍCH HIỆU SUẤT VÀ TỶ TRỌNG SHOWROOM</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>DOANH THU THEO SHOWROOM (VNĐ)</span>
+                        <i class="fa-solid fa-chart-bar"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="showroomRevChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>TỶ LỆ CHỐT ĐƠN THEO SHOWROOM (%)</span>
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="showroomCvrChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 3: PHÂN TÍCH SẢN PHẨM -->
+        <section id="sec-san-pham">
+            <div class="section-header">
+                <i class="fa-solid fa-shirt" style="color: var(--toasted-umber);"></i>
+                <h3>3. PHÂN TÍCH DANH MỤC SẢN PHẨM (13 SẢN PHẨM)</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>TOP DANH MỤC THEO DOANH THU</span>
+                        <i class="fa-solid fa-ranking-star"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="topProdRevChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>QUAN TÂM VS MUA THEO DANH MỤC</span>
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="prodDualChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BẢNG PHÂN LOẠI 4 NHÓM SẢN PHẨM BCG MATRIX -->
+            <div class="dashboard-box" style="margin-top: 20px;">
+                <div class="box-title">
+                    <span>PHÂN LOẠI MA TRẬN 4 NHÓM SẢN PHẨM (HOTSELL - TIỀM NĂNG - BÁN KÈM - TỒN Ứ)</span>
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Danh Mục Sản Phẩm</th>
+                            <th>Lượt Quan Tâm</th>
+                            <th>Số SP Bán</th>
+                            <th>CVR SP %</th>
+                            <th>Doanh Thu SP</th>
+                            <th>Phân Loại Ma Trận</th>
+                            <th>Hành Động Khuyến Nghị</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bcgProductTableBody">
+                        <!-- Render bằng dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PHẦN 4: PHÂN TÍCH KHÁCH HÀNG -->
+        <section id="sec-khach-hang">
+            <div class="section-header">
+                <i class="fa-solid fa-users" style="color: var(--toasted-umber);"></i>
+                <h3>4. PHÂN TÍCH NGUỒN KHÁCH HÀNG & LOẠI KHÁCH HÀNG</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>TỶ TRỌNG NGUỒN KHÁCH HÀNG</span>
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="customerSourceChart"></canvas>
+                    </div>
+                </div>
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>ĐÁNH GIÁ CHẤT LƯỢNG KÊNH NGUỒN KHÁCH</span>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Nguồn Khách</th>
+                                <th>Lượt Khách</th>
+                                <th>Tỷ Trọng</th>
+                                <th>CVR %</th>
+                                <th>Đánh Giá Kênh</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sourceTableBody">
+                            <tr><td style="text-align: left;">Đi ngang cửa hàng</td><td>188</td><td>43.1%</td><td>78.5%</td><td>Siêu Hiệu Quả</td></tr>
+                            <tr><td style="text-align: left;">Khách quay lại</td><td>72</td><td>16.5%</td><td>85.2%</td><td>VIP Trung Thành</td></tr>
+                            <tr><td style="text-align: left;">Khách giới thiệu</td><td>64</td><td>14.7%</td><td>81.0%</td><td>Chất Lượng Cao</td></tr>
+                            <tr><td style="text-align: left;">Marketing (FB, TikTok)</td><td>57</td><td>13.1%</td><td>52.6%</td><td>Cần Tăng Chốt</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 5: LOST SALE -->
+        <section id="sec-lost-sale">
+            <div class="section-header">
+                <i class="fa-solid fa-triangle-exclamation" style="color: var(--toasted-umber);"></i>
+                <h3>5. PHÂN TÍCH LOST SALE & NGUYÊN NHÂN RỚT ĐƠN</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>TOP NGUYÊN NHÂN RỚT ĐƠN</span>
+                        <i class="fa-solid fa-list-ol"></i>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Nguyên Nhân Chưa Chốt</th>
+                                <th>Số Lượt</th>
+                                <th>Tỷ Trọng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lostSaleTableBody">
+                            <tr><td style="text-align: left;">1. Chưa có nhu cầu</td><td>14</td><td>14,4%</td></tr>
+                            <tr><td style="text-align: left;">2. Chỉ tham khảo</td><td>12</td><td>12,4%</td></tr>
+                            <tr><td style="text-align: left;">3. Đang xem thương hiệu khác</td><td>12</td><td>12,4%</td></tr>
+                            <tr><td style="text-align: left;">4. Đợi CT ưu đãi</td><td>12</td><td>12,4%</td></tr>
+                            <tr><td style="text-align: left;">5. Chưa phù hợp giá</td><td>9</td><td>9,3%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>TỔNG QUAN NGUY CƠ LOST SALE</span>
+                        <i class="fa-solid fa-shield-cat"></i>
+                    </div>
+                    <div class="lost-sale-card">
+                        <div class="lost-metric-item">
+                            <i class="fa-solid fa-user-slash"></i>
+                            <div class="val" id="lostCardCount">97</div>
+                            <div class="lbl">Khách chưa mua</div>
+                        </div>
+                        <div class="lost-metric-item">
+                            <i class="fa-solid fa-percent"></i>
+                            <div class="val" id="lostCardCvr">32.3%</div>
+                            <div class="lbl">Tỷ lệ Lost Sale</div>
+                        </div>
+                        <div class="lost-metric-item">
+                            <i class="fa-solid fa-cart-arrow-down"></i>
+                            <div class="val" id="lostCardRate">97 lượt</div>
+                            <div class="lbl">Tổng lượt rớt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BẢNG ĐIỂM NÓNG LOST SALE THEO SHOWROOM & KHUNG GIỜ -->
+            <div class="dashboard-box" style="margin-top: 20px;">
+                <div class="box-title">
+                    <span>ĐIỂM NÓNG LOST SALE THEO SHOWROOM & LÝ DO RỚT CHÍNH</span>
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Showroom Điểm Nóng</th>
+                            <th>Lượt Khách</th>
+                            <th>Số Lượt Rớt</th>
+                            <th>Tỷ Lệ Lost %</th>
+                            <th>Lý Do Rớt Chủ Đạo</th>
+                            <th>Status</th>
+                            <th>Giải Pháp Ứng Cứu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lostHotspotTableBody">
+                        <!-- Render bằng dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PHẦN 6: THỜI GIAN -->
+        <section id="sec-thoi-gian">
+            <div class="section-header">
+                <i class="fa-solid fa-clock" style="color: var(--toasted-umber);"></i>
+                <h3>6. PHÂN TÍCH THỜI GIAN — KHUNG GIỜ & THỨ TRONG TUẦN</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>HIỆU SUẤT THEO KHUNG GIỜ (IN-STORE)</span>
+                        <i class="fa-solid fa-business-time"></i>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Khung giờ</th>
+                                <th>Lượt khách</th>
+                                <th>Khách mua</th>
+                                <th>CVR</th>
+                                <th>Doanh thu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hourlyTableBody">
+                            <tr><td>08:00 - 11:00</td><td>43</td><td>35</td><td>81,4%</td><td>78.047.319</td></tr>
+                            <tr><td>11:00 - 13:00</td><td>50</td><td>36</td><td>72,0%</td><td>86.185.311</td></tr>
+                            <tr><td>13:00 - 15:00</td><td>57</td><td>39</td><td>68,4%</td><td>88.038.753</td></tr>
+                            <tr><td>15:00 - 17:00</td><td>54</td><td>34</td><td>63,0%</td><td>80.571.051</td></tr>
+                            <tr><td>17:00 - 19:00</td><td>48</td><td>28</td><td>58,3%</td><td>61.840.722</td></tr>
+                            <tr><td>19:00 - 22:00</td><td>48</td><td>31</td><td>64,6%</td><td>71.220.203</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>DOANH THU THEO THỨ TRONG TUẦN</span>
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dowRevChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 7: HÀNH VI MUA -->
+        <section id="sec-hanh-vi">
+            <div class="section-header">
+                <i class="fa-solid fa-cart-shopping" style="color: var(--toasted-umber);"></i>
+                <h3>7. PHÂN TÍCH HÀNH VI MUA HÀNG — MỤC ĐÍCH & GIỎ HÀNG</h3>
+            </div>
+            <div class="grid-2">
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>MỤC ĐÍCH SỬ DỤNG SẢN PHẨM</span>
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Mục Đích Sử Dụng</th>
+                                <th>Số Đơn Mua</th>
+                                <th>Tỷ Trọng</th>
+                                <th>Đánh Giá Nhu Cầu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align: left;">Cá nhân sử dụng</td><td>142</td><td>70.0%</td><td>Tiêu Dùng Thường Xuyên</td></tr>
+                            <tr><td style="text-align: left;">Mua quà tặng</td><td>45</td><td>22.2%</td><td>AOV Cao (Quà Tặng)</td></tr>
+                            <tr><td style="text-align: left;">Công ty / Doanh nghiệp</td><td>16</td><td>7.8%</td><td>Tiềm Năng B2B</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dashboard-box">
+                    <div class="box-title">
+                        <span>KÍCH THƯỚC GIỎ HÀNG (BASKET SIZE)</span>
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Loại Giỏ Hàng</th>
+                                <th>Số Hóa Đơn</th>
+                                <th>Tỷ Trọng</th>
+                                <th>Khuyến Nghị Cross-Sell</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align: left;">Đơn 1 SP (Single)</td><td>85</td><td>41.9%</td><td>Cần Tăng Bán Kèm Phụ Kiện</td></tr>
+                            <tr><td style="text-align: left;">Đơn 2 SP (Double)</td><td>72</td><td>35.5%</td><td>Đơn Chuẩn Kép (Áo + Quần)</td></tr>
+                            <tr><td style="text-align: left;">Đơn 3+ SP (Multi)</td><td>46</td><td>22.6%</td><td>Giỏ Hàng Lớn Exellent</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BẢNG HÌNH THỨC MUA: NGUYÊN GIÁ VS ƯU ĐÃI/SALE -->
+            <div class="dashboard-box" style="margin-top: 20px;">
+                <div class="box-title">
+                    <span>PHÂN TÍCH HÌNH THỨC MUA: NGUYÊN GIÁ VS ƯU ĐÃI (BẢO VỆ BIÊN LỢI NHUẬN)</span>
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Hình Thức Mua</th>
+                            <th>Số Đơn Mua</th>
+                            <th>Tỷ Trọng %</th>
+                            <th>Doanh Thu (VNĐ)</th>
+                            <th>Giá Trị HĐ TB (AOV)</th>
+                            <th>Status</th>
+                            <th>Nhận Định Quản Trị</th>
+                            <th>Hành Động Đề Xuất</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fullSaleTypeTableBody">
+                        <!-- Render bằng dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            <p>Dữ liệu được tổng hợp tự động từ <strong>03_Bảng_Tính_KPI</strong> | Cập nhật theo điều kiện lọc đang áp dụng</p>
+        </footer>
+
+    </main>
+
+    <!-- DASHBOARD LOGIC SCRIPT (V4 FRESH FILE LOAD - ZERO BROWSER CACHE) -->
+    <script src="config.js?v=4.0"></script>
+    <script src="dashboard_v4.js"></script>
+</body>
+</html>
