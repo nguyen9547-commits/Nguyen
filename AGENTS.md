@@ -134,6 +134,8 @@ Mọi Bảng Phân Tích trên Sheet 03 BẮT BUỘC tuân thủ nghiêm ngặt 
 
 ### 🛡️ NGUYÊN TẮC 9: AN TOÀN DỮ LIỆU & SAO LƯU (BACKUP & RECOVERY RULE)
 - Hàm làm sạch và đồng bộ Sheet 02 (`syncDataProcessingRow`) chỉ được phép dọn nội dung dòng dữ liệu (`clearContent()`), CẤM xóa dòng/cột hoặc xóa tiêu đề (Header row 1).
+- **Quy chuẩn Sao lưu Local**: Mỗi lần sao lưu dự án BẮT BUỘC CHỈ TẠO 1 FILE NÉN `.zip` DUY NHẤT dạng `.backups/backup-DD-MM-YYYY.zip`, CẤM tạo song song cả thư mục rải rác.
+- **Cơ chế Khôi phục (Rollback Protocol)**: Khi người dùng yêu cầu khôi phục theo tên bản (ví dụ: *"Khôi phục về bản backup-02-08-2026"*), AI BẮT BUỘC tự động giải nén file `.zip` tương ứng và hoàn tác 100% mã nguồn về thời điểm đó.
 - Phải có hàm `backupDailyToDrive()` chạy tự động lúc 23:00 hàng ngày xuất file sao lưu JSON/CSV lưu vào thư mục Google Drive dự phòng.
 - Tự động bỏ qua các bản ghi khảo sát có cờ kiểm toán tại Cột Q (Col 17 Sheet 01) mang giá trị `"HỦY"`, `"HUY"`, `"VOID"`, `"SAI"`.
 

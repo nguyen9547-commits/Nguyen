@@ -108,7 +108,7 @@ flowchart TD
 - ✅ **Khắc phục triệt tiêu lỗi rỗng 3 biểu đồ & Bảng Ma trận BCG Sản phẩm trên Web Dashboard**: Đã sửa khớp 100% các ID Canvas giữa HTML (`topProdRevChart`, `prodDualChart`, `customerSourceChart`, `dowRevChart`) và JS (`dashboard_v4.js`), đồng thời bổ sung bộ Renderer hiển thị bảng `bcgProductTableBody`.
 - ✅ **Sao chép file dashboard.html ra thư mục gốc**: Đã đưa `dashboard.html` từ `.agent/dashboard.html` ra ngay ngoài thư mục chính `Khao sat khach hang/dashboard.html` để người dùng nhìn thấy ngay trong File Manager.
 - 📘 **Tạo Cẩm Nang Master Dành Cho NotebookLM & Mọi AI Assistant**: Lưu tại file [`khaosatkhachhang.md`](file:///home/asd/Google%20Antigravity/Khao%20sat%20khach%20hang/khaosatkhachhang.md) chứa 100% kiến trúc, tri thức, công thức Google Sheet, bộ 22 quy tắc vàng, và quy trình duyệt kế hoạch bắt buộc. Đồng bộ NotebookLM ID: `69055d08-15c9-4af6-a9af-b2051dee9be1`.
-- 📦 **Đóng Gói Bản Sao Lưu Chuẩn `backup-02-08-2026`**: Lưu tại thư mục `.backups/backup-02-08-2026/` và file nén `.backups/backup-02-08-2026.zip` chứa 100% bản sao mã nguồn Web Form Khảo sát, Executive Dashboard, Slide Đào tạo, Apps Script Backend, file cấu hình GitHub/Vercel và toàn bộ bộ nhớ tri thức master. Có thể khôi phục (rollback) bất kỳ lúc nào theo yêu cầu.
+- 📦 **Đóng Gói Bản Sao Lưu Chuẩn File `.zip` Duy Nhất (`backup-DD-MM-YYYY.zip`)**: Quy định từ nay mọi bản sao lưu CHỈ ĐƯỢC TẠO 1 FILE NÉN `.zip` DUY NHẤT lưu tại thư mục `.backups/backup-DD-MM-YYYY.zip` (đã nén sạch các bản `backup-01-08-2026.zip` và `backup-02-08-2026.zip`). Khi người dùng muốn quay lại phiên bản nào, chỉ cần gõ tên bản đó (ví dụ: *"Khôi phục về bản backup-02-08-2026"*), AI sẽ tự động giải nén và khôi phục 100% hệ thống về thời điểm đó.
 
 
 
