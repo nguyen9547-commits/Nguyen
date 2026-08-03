@@ -618,10 +618,23 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
 
     var showrooms = Object.keys(srMap).map(function(k) {
         var item = srMap[k];
+        var buy = item.buy || 0;
+        var trf = item.trf || 0;
+        var lost = item.lost !== undefined ? item.lost : Math.max(trf - buy, 0);
+        var rev = item.revenue || 0;
+        var cvr = trf > 0 ? parseFloat(((buy / trf) * 100).toFixed(1)) : 0;
+        var aov = buy > 0 ? Math.round(rev / buy) : 0;
+        var rpv = trf > 0 ? Math.round(rev / trf) : 0;
         return {
             name: item.name,
-            revenue: item.revenue,
-            cvr: item.trf > 0 ? parseFloat(((item.buy / item.trf) * 100).toFixed(1)) : 0
+            trf: trf,
+            buy: buy,
+            purchases: buy,
+            lost: lost,
+            revenue: rev,
+            cvr: cvr,
+            aov: aov,
+            rpv: rpv
         };
     });
 

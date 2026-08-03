@@ -236,16 +236,27 @@ function doGet(e) {
     
     var srList = Object.keys(srMap).map(function(k) {
       var item = srMap[k];
+      var buy = item.buy || 0;
+      var trf = item.trf || 0;
+      var lost = item.lost !== undefined ? item.lost : Math.max(trf - buy, 0);
+      var rev = item.rev || 0;
+      var cvr = trf > 0 ? parseFloat(((buy / trf) * 100).toFixed(1)) : 0;
+      var aov = buy > 0 ? Math.round(rev / buy) : 0;
+      var rpv = trf > 0 ? Math.round(rev / trf) : 0;
       return {
         name: item.name,
-        revenue: item.rev,
-        trf: item.trf,
-        lost: item.lost,
-        cvr: item.trf > 0 ? parseFloat(((item.buy / item.trf) * 100).toFixed(1)) : 0,
-        pct: trf > 0 ? ((item.lost / trf) * 100).toFixed(1) + '%' : '0.0%',
+        trf: trf,
+        buy: buy,
+        purchases: buy,
+        lost: lost,
+        revenue: rev,
+        cvr: cvr,
+        aov: aov,
+        rpv: rpv,
+        pct: trf > 0 ? ((lost / trf) * 100).toFixed(1) + '%' : '0.0%',
         reason: 'Theo dõi chi tiết',
-        stt: item.lost > 0 ? '🟠 Cần Cải Thiện' : '🟢 Kiểm Soát Tốt',
-        act: item.lost > 0 ? 'Bổ sung tồn kho & ca trực' : 'Duy trì hiệu suất'
+        stt: lost > 0 ? '🟠 Cần Cải Thiện' : '🟢 Kiểm Soát Tốt',
+        act: lost > 0 ? 'Bổ sung tồn kho & ca trực' : 'Duy trì hiệu suất'
       };
     }).sort(function(a,b){ return b.revenue - a.revenue; });
     
