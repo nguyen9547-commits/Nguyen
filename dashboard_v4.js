@@ -239,7 +239,10 @@ function updateUI(d) {
     renderDailyTrendChart(d.dailyTrend);
     renderShowroomCharts(d.showrooms);
     renderProductCharts(d.products);
-    renderCustomerSourceChart(d.sources);
+    renderCustomerSourceChart(d.sources, d.sourcesTable);
+    renderLostSaleSection(d.lostSaleTable, d.lostCard, d.lostHotspots);
+    renderHourlyTable(d.hourlyTable);
+    renderCustomerBehaviorSection(d.purposeTable, d.basketTable, d.fullSaleTypeTable);
     renderDowChart(d.dow);
 }
 
@@ -282,9 +285,12 @@ const ALL_RAW_SURVEY_RECORDS = [];
                 pur: isPur ? "Có" : "Không",
                 rev: itemRev,
                 inv: isPur ? ("HD600" + i) : "",
-                qty: isPur ? 3.81 : 0,
+                qty: isPur ? (i % 3 + 1) : 0,
                 prod: isPur ? "Giày, Polo, Tshirt, Sơ mi" : "Không",
-                int: "Giày, Polo, Tshirt, Sơ mi"
+                int: "Giày, Polo, Tshirt, Sơ mi",
+                usagePurpose: (i % 2 === 0) ? "Cá nhân sử dụng" : "Mua quà tặng",
+                saleType: (itemRev >= 2000000) ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT,
+                reason: !isPur ? (i % 3 === 0 ? "Chưa có nhu cầu" : (i % 3 === 1 ? "Chỉ tham khảo" : "Đợi CT ưu đãi")) : ""
             });
         }
 
@@ -299,9 +305,12 @@ const ALL_RAW_SURVEY_RECORDS = [];
                 pur: "Có",
                 rev: baseRevPerPur,
                 inv: "HD60099" + totalPurAdded,
-                qty: 3.81,
+                qty: 2,
                 prod: "Giày, Polo",
-                int: "Dịch vụ / Hậu mãi (0đ)"
+                int: "Dịch vụ / Hậu mãi (0đ)",
+                usagePurpose: "Cá nhân sử dụng",
+                saleType: FORM_PURCHASE_ORIGINAL,
+                reason: ""
             });
         }
     });
@@ -338,9 +347,12 @@ const ALL_RAW_SURVEY_RECORDS = [];
                 pur: isPur ? "Có" : "Không",
                 rev: itemRev,
                 inv: isPur ? ("HD500" + i) : "",
-                qty: isPur ? 3.79 : 0,
+                qty: isPur ? (i % 3 + 1) : 0,
                 prod: isPur ? "Giày, Polo, Tshirt, Sơ mi" : "Không",
-                int: "Giày, Polo, Tshirt, Sơ mi"
+                int: "Giày, Polo, Tshirt, Sơ mi",
+                usagePurpose: (i % 2 === 0) ? "Cá nhân sử dụng" : "Mua quà tặng",
+                saleType: (itemRev >= 2000000) ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT,
+                reason: !isPur ? (i % 3 === 0 ? "Chưa có nhu cầu" : (i % 3 === 1 ? "Chỉ tham khảo" : "Đợi CT ưu đãi")) : ""
             });
         }
 
@@ -355,23 +367,30 @@ const ALL_RAW_SURVEY_RECORDS = [];
                 pur: "Có",
                 rev: baseRevPerPur,
                 inv: "HD50099" + totalPurAdded,
-                qty: 3.79,
+                qty: 2,
                 prod: "Giày, Polo",
-                int: "Dịch vụ / Hậu mãi (0đ)"
+                int: "Dịch vụ / Hậu mãi (0đ)",
+                usagePurpose: "Cá nhân sử dụng",
+                saleType: FORM_PURCHASE_ORIGINAL,
+                reason: ""
             });
         }
     });
 
-    // 3. DỮ LIỆU THÁNG 7/2026 (8 DÒNG KHẢO SÁT THÔ 302 - 309 TRÊN SHEET CỦA KHÁCH HÀNG)
+    // 3. DỮ LIỆU THÁNG 7/2026 & THÁNG 8/2026
     var julyRealRecords = [
-        { date: "26/07/2026", sr: "Thanh Hóa", time: "13:00 - 15:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 4500000, inv: "HD00987", qty: 2, prod: "Polo, Tshirt, Jacket, Áo len", int: "Polo, Phụ kiện" },
-        { date: "26/07/2026", sr: "Xã Đàn", time: "15:00 - 17:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 4504000, inv: "HD08893", qty: 2, prod: "Giày, Tshirt", int: "Giày, Polo" },
-        { date: "27/07/2026", sr: "Xã Đàn", time: "15:00 - 17:00", cust: "Khách cũ", src: "Khác (Đổi/Bảo hành)", pur: "Có", rev: 530000, inv: "HD09873", qty: 1, prod: "Phụ kiện", int: "Phụ kiện" },
-        { date: "27/07/2026", sr: "Trần Duy Hưng", time: "11:00 - 13:00", cust: "Khách cũ", src: "Khác (Đổi/Bảo hành)", pur: "Có", rev: 430000, inv: "HD09873", qty: 1, prod: "Phụ kiện", int: "Phụ kiện" },
-        { date: "27/07/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Marketing (FB, TikTok)", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Dịch vụ" },
-        { date: "27/07/2026", sr: "Xã Đàn", time: "11:00 - 13:00", cust: "Khách cũ", src: "Khách chủ động", pur: "Có", rev: 5600000, inv: "HD086369", qty: 2, prod: "Giày, Tshirt", int: "Giày, Tshirt, Jacket" },
-        { date: "27/07/2026", sr: "Bắc Ninh", time: "13:00 - 15:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày, Blazer" },
-        { date: "27/07/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Khách chủ động", pur: "Có", rev: 0, inv: "", qty: 2, prod: "Giày", int: "Giày, Áo da" }
+        { date: "26/07/2026", sr: "Thanh Hóa", time: "13:00 - 15:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 4500000, inv: "HD00987", qty: 2, prod: "Polo, Tshirt, Jacket, Áo len", int: "Polo, Phụ kiện", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "26/07/2026", sr: "Xã Đàn", time: "15:00 - 17:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 4504000, inv: "HD08893", qty: 2, prod: "Giày, Tshirt", int: "Giày, Polo", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "27/07/2026", sr: "Xã Đàn", time: "15:00 - 17:00", cust: "Khách cũ", src: "Khác (Đổi/Bảo hành)", pur: "Có", rev: 530000, inv: "HD09873", qty: 1, prod: "Phụ kiện", int: "Phụ kiện", usagePurpose: "Cá nhân sử dụng", saleType: "Mua có ưu đãi", reason: "" },
+        { date: "27/07/2026", sr: "Trần Duy Hưng", time: "11:00 - 13:00", cust: "Khách cũ", src: "Khác (Đổi/Bảo hành)", pur: "Có", rev: 430000, inv: "HD09873", qty: 1, prod: "Phụ kiện", int: "Phụ kiện", usagePurpose: "Cá nhân sử dụng", saleType: "Mua có ưu đãi", reason: "" },
+        { date: "27/07/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Marketing (FB, TikTok)", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Dịch vụ", usagePurpose: "", saleType: "", reason: "Chưa có nhu cầu" },
+        { date: "27/07/2026", sr: "Xã Đàn", time: "11:00 - 13:00", cust: "Khách cũ", src: "Khách chủ động quay lại", pur: "Có", rev: 5600000, inv: "HD086369", qty: 2, prod: "Giày, Tshirt", int: "Giày, Tshirt, Jacket", usagePurpose: "Mua quà tặng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "27/07/2026", sr: "Bắc Ninh", time: "13:00 - 15:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày, Blazer", usagePurpose: "", saleType: "", reason: "Chỉ tham khảo" },
+        { date: "27/07/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Khách chủ động quay lại", pur: "Có", rev: 0, inv: "", qty: 2, prod: "Giày", int: "Giày, Áo da", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        // 4. MOCK RECORD DÀNH CHO THÁNG 8/2026
+        { date: "03/08/2026", sr: "Trần Duy Hưng", time: "08:00 - 11:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 2500000, inv: "HD8001", qty: 1, prod: "Polo", int: "Polo", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "03/08/2026", sr: "Xã Đàn", time: "11:00 - 13:00", cust: "Khách mới", src: "Marketing (FB, TikTok)", pur: "Có", rev: 1600000, inv: "HD8002", qty: 1, prod: "Sơ mi", int: "Sơ mi", usagePurpose: "Mua quà tặng", saleType: "Mua có ưu đãi", reason: "" },
+        { date: "03/08/2026", sr: "Thanh Hóa", time: "15:00 - 17:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày", usagePurpose: "", saleType: "", reason: "Chưa phù hợp giá" }
     ];
 
     julyRealRecords.forEach(function(r) {
@@ -408,10 +427,22 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
     var srMap = {}, dateMap = {}, dowMap = [0, 0, 0, 0, 0, 0, 0];
     var prodQtMap = {}, prodMuaMap = {}, prodRevMap = {};
 
+    var srcNames = ["Đi ngang cửa hàng", "Khách chủ động quay lại", "Khách được giới thiệu", "Marketing (FB, TikTok)"];
+    var srcMap = {};
+    srcNames.forEach(function(n) { srcMap[n] = { name: n, trf: 0, buy: 0 }; });
+
+    var lostReasonMap = {};
+    var slotArr = ["08:00 - 11:00", "11:00 - 13:00", "13:00 - 15:00", "15:00 - 17:00", "17:00 - 19:00", "19:00 - 22:00"];
+    var hourlyMap = {};
+    slotArr.forEach(function(s) { hourlyMap[s] = { slot: s, trf: 0, buy: 0, rev: 0 }; });
+
+    var purposeMap = { "Cá nhân sử dụng": 0, "Mua quà tặng": 0, "Công ty / Doanh nghiệp": 0 };
+    var basketMap = { "Đơn 1 SP (Single)": 0, "Đơn 2 SP (Double)": 0, "Đơn 3+ SP (Multi)": 0 };
+    var saleTypeMap = { "Mua nguyên giá": { buy: 0, rev: 0 }, "Mua có ưu đãi": { buy: 0, rev: 0 } };
+
     filtered.forEach(function(r) {
         var fullStr = ((r.src || "") + " " + (r.int || "") + " " + (r.pur || "")).toLowerCase();
         var isExchange = (fullStr.indexOf("đổi hàng") !== -1 || fullStr.indexOf("bảo hành") !== -1 || fullStr.indexOf("doi hang") !== -1 || fullStr.indexOf("bao hanh") !== -1);
-        
         var isPur = (r.pur === "Có" || r.pur === FORM_PURCHASE_ORIGINAL || r.pur === FORM_PURCHASE_DISCOUNT);
         
         if (isExchange) {
@@ -431,11 +462,50 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
             lost++;
         }
 
-        if (!srMap[r.sr]) srMap[r.sr] = { name: r.sr, revenue: 0, buy: 0, trf: 0, lost: 0 };
+        if (!srMap[r.sr]) srMap[r.sr] = { name: r.sr, revenue: 0, buy: 0, trf: 0, lost: 0, mainReason: "" };
         srMap[r.sr].revenue += r.rev;
         if (isPur) srMap[r.sr].buy++;
         if (!isExchange) srMap[r.sr].trf++;
         if (!isPur && !isExchange) srMap[r.sr].lost++;
+
+        // Nguồn khách
+        var sName = r.src || "Đi ngang cửa hàng";
+        var matchedSrc = srcNames.find(function(n) { return sName.indexOf(n) !== -1 || n.indexOf(sName) !== -1; }) || "Đi ngang cửa hàng";
+        if (!srcMap[matchedSrc]) srcMap[matchedSrc] = { name: matchedSrc, trf: 0, buy: 0 };
+        if (!isExchange) srcMap[matchedSrc].trf++;
+        if (isPur) srcMap[matchedSrc].buy++;
+
+        // Lost Sale
+        if (!isPur && !isExchange) {
+            var reas = r.reason || "Chưa có nhu cầu";
+            lostReasonMap[reas] = (lostReasonMap[reas] || 0) + 1;
+            if (!srMap[r.sr].mainReason) srMap[r.sr].mainReason = reas;
+        }
+
+        // Khung giờ
+        var timeSlot = slotArr.find(function(s) { return r.time && r.time.indexOf(s) !== -1; }) || "11:00 - 13:00";
+        if (!hourlyMap[timeSlot]) hourlyMap[timeSlot] = { slot: timeSlot, trf: 0, buy: 0, rev: 0 };
+        if (!isExchange) hourlyMap[timeSlot].trf++;
+        if (isPur) {
+            hourlyMap[timeSlot].buy++;
+            hourlyMap[timeSlot].rev += r.rev;
+        }
+
+        // Mục đích & Giỏ hàng & Hình thức mua
+        if (isPur) {
+            var pUse = r.usagePurpose || "Cá nhân sử dụng";
+            purposeMap[pUse] = (purposeMap[pUse] || 0) + 1;
+
+            var qNum = r.qty || 1;
+            if (qNum <= 1) basketMap["Đơn 1 SP (Single)"]++;
+            else if (qNum === 2) basketMap["Đơn 2 SP (Double)"]++;
+            else basketMap["Đơn 3+ SP (Multi)"]++;
+
+            var sType = r.saleType || (r.rev >= 2000000 ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT);
+            if (!saleTypeMap[sType]) saleTypeMap[sType] = { buy: 0, rev: 0 };
+            saleTypeMap[sType].buy++;
+            saleTypeMap[sType].rev += r.rev;
+        }
 
         if (!dateMap[r.date]) dateMap[r.date] = 0;
         dateMap[r.date] += r.rev;
@@ -503,6 +573,89 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
     var prodMua = prodKeys.map(k => prodMuaMap[k] || 0);
     var prodRev = prodKeys.map(k => ((prodRevMap[k] || 0) / 1000000).toFixed(2));
 
+    var bcgTable = prodKeys.map(function(k) {
+        var qVal = prodQtMap[k] || 0;
+        var mVal = prodMuaMap[k] || 0;
+        var prodRevAmt = prodRevMap[k] || 0;
+        var prodCvr = qVal > 0 ? ((mVal / qVal) * 100).toFixed(1) : (mVal > 0 ? '100.0' : '0.0');
+        var cat = (parseFloat(prodCvr) >= 60.0 && mVal >= 2) ? '🔥 TOP HOTSELL' : (mVal > 0 ? '🌟 TIỀM NĂNG' : '📦 BÁN KÈM');
+        return {
+            name: k,
+            qt: qVal,
+            buy: mVal,
+            cvr: prodCvr + '%',
+            revenue: prodRevAmt,
+            cat: cat,
+            act: cat.indexOf('HOTSELL') !== -1 ? 'Trưng bày Hotspot trung tâm' : 'Đẩy mạnh kịch bản combo'
+        };
+    }).sort(function(a,b){ return parseFloat(b.cvr) - parseFloat(a.cvr); });
+
+    var sourcesTable = Object.keys(srcMap).map(function(k) {
+        var item = srcMap[k];
+        var pct = traffic > 0 ? ((item.trf / traffic) * 100).toFixed(1) + '%' : '0.0%';
+        var cvrNum = item.trf > 0 ? ((item.buy / item.trf) * 100).toFixed(1) : '0.0';
+        var ev = parseFloat(cvrNum) >= 75 ? 'Siêu Hiệu Quả' : (parseFloat(cvrNum) >= 60 ? 'Chất Lượng Cao' : (item.trf > 0 ? 'Cần Tăng Chốt' : 'Chưa có dữ liệu'));
+        return { name: item.name, trf: item.trf, pct: pct, cvr: cvrNum + '%', eval: ev };
+    }).sort(function(a,b){ return b.trf - a.trf; });
+
+    var lostSaleTable = Object.keys(lostReasonMap).map(function(k) {
+        var cnt = lostReasonMap[k];
+        var pct = lost > 0 ? ((cnt / lost) * 100).toFixed(1) + '%' : '0.0%';
+        return { reason: k, count: cnt, pct: pct };
+    }).sort(function(a,b){ return b.count - a.count; });
+    if (lostSaleTable.length === 0) {
+        lostSaleTable = [
+            { reason: "1. Chưa có nhu cầu", count: 0, pct: "0.0%" },
+            { reason: "2. Chỉ tham khảo", count: 0, pct: "0.0%" }
+        ];
+    }
+
+    var lostHotspots = Object.keys(srMap).map(function(k) {
+        var item = srMap[k];
+        var lPct = item.trf > 0 ? ((item.lost / item.trf) * 100).toFixed(1) : '0.0';
+        return {
+            sr: item.name,
+            trf: item.trf,
+            lost: item.lost,
+            lostPct: lPct + '%',
+            reason: item.mainReason || 'Theo dõi điểm rớt đơn',
+            status: item.lost > 0 ? '🟠 Cần Cải Thiện' : '🟢 Kiểm Soát Tốt',
+            action: item.lost > 0 ? 'Bổ sung tồn kho & đào tạo chốt sale' : 'Duy trì hiệu suất'
+        };
+    }).sort(function(a,b){ return b.lost - a.lost; });
+
+    var hourlyTable = slotArr.map(function(s) {
+        var item = hourlyMap[s] || { slot: s, trf: 0, buy: 0, rev: 0 };
+        var cvrStr = item.trf > 0 ? ((item.buy / item.trf) * 100).toFixed(1) + '%' : '0.0%';
+        return { slot: s, trf: item.trf, buy: item.buy, cvr: cvrStr, rev: item.rev };
+    });
+
+    var purposeTable = Object.keys(purposeMap).map(function(k) {
+        var cnt = purposeMap[k];
+        var pct = purchases > 0 ? ((cnt / purchases) * 100).toFixed(1) + '%' : '0.0%';
+        var ev = k === "Cá nhân sử dụng" ? 'Tiêu Dùng Thường Xuyên' : (k === "Mua quà tặng" ? 'AOV Cao (Quà Tặng)' : 'Tiềm Năng B2B');
+        return { purpose: k, buy: cnt, pct: pct, eval: ev };
+    });
+
+    var basketTable = Object.keys(basketMap).map(function(k) {
+        var cnt = basketMap[k];
+        var pct = purchases > 0 ? ((cnt / purchases) * 100).toFixed(1) + '%' : '0.0%';
+        var rec = k.indexOf("Single") !== -1 ? 'Cần Tăng Bán Kèm Phụ Kiện' : (k.indexOf("Double") !== -1 ? 'Đơn Chuẩn Kép (Áo + Quần)' : 'Giỏ Hàng Lớn Excellent');
+        return { basket: k, invoices: cnt, pct: pct, rec: rec };
+    });
+
+    var fullSaleTypeTable = Object.keys(saleTypeMap).map(function(k) {
+        var item = saleTypeMap[k] || { buy: 0, rev: 0 };
+        var b = item.buy;
+        var r = item.rev;
+        var pct = purchases > 0 ? ((b / purchases) * 100).toFixed(1) + '%' : '0.0%';
+        var aov = b > 0 ? Math.round(r / b) : 0;
+        var st = k === FORM_PURCHASE_ORIGINAL ? '🟢 Tối Ưu Lợi Nhuận' : '🟡 Theo Dõi Chi Chiết';
+        var ins = k === FORM_PURCHASE_ORIGINAL ? 'Biên lợi nhuận cao, khách hài lòng sản phẩm' : 'Thúc đẩy sản lượng, tăng quy mô giỏ hàng';
+        var act = k === FORM_PURCHASE_ORIGINAL ? 'Duy trì trưng bày chuẩn VMD' : 'Kiểm soát ngưỡng giảm giá';
+        return { saleType: k, buy: b, pct: pct, revenue: r, aov: aov, status: st, insight: ins, action: act };
+    });
+
     return {
         kpi: {
             traffic: traffic,
@@ -518,8 +671,18 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
             labels: prodKeys,
             productsRev: prodRev,
             productsQt: prodQt,
-            productsMua: prodMua
+            productsMua: prodMua,
+            bcgTable: bcgTable
         },
+        sources: sourcesTable,
+        sourcesTable: sourcesTable,
+        lostSaleTable: lostSaleTable,
+        lostCard: { count: lost, cvr: traffic > 0 ? ((lost / traffic) * 100).toFixed(1) : "0.0" },
+        lostHotspots: lostHotspots,
+        hourlyTable: hourlyTable,
+        purposeTable: purposeTable,
+        basketTable: basketTable,
+        fullSaleTypeTable: fullSaleTypeTable,
         dow: dowMap.map(function(v) { return (v / 1000).toFixed(0); })
     };
 }
@@ -700,9 +863,25 @@ function renderProductCharts(pData) {
     }
 }
 
-function renderCustomerSourceChart(sources) {
+function renderCustomerSourceChart(sources, sourcesTable) {
     const ctxDonut = document.getElementById('customerSourceChart') || document.getElementById('sourceDonutChart');
     const ctxBar = document.getElementById('sourceCvrBarChart');
+    const tbodySource = document.getElementById('sourceTableBody');
+
+    const srcData = sourcesTable || sources || [];
+    if (tbodySource && Array.isArray(srcData)) {
+        if (srcData.length === 0) {
+            tbodySource.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #888;">Chưa có dữ liệu nguồn khách trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodySource.innerHTML = srcData.map(item => `<tr>
+                <td style="text-align: left;">${item.name}</td>
+                <td>${formatNum(item.trf)}</td>
+                <td>${item.pct || '0.0%'}</td>
+                <td style="font-weight: bold; color: #987147;">${item.cvr || '0.0%'}</td>
+                <td>${item.eval || 'Chưa rõ'}</td>
+            </tr>`).join('');
+        }
+    }
 
     if (ctxDonut && charts.srcDonut) charts.srcDonut.destroy();
     if (ctxBar && charts.srcBar) charts.srcBar.destroy();
@@ -769,7 +948,7 @@ function renderDowChart(dowData) {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [{ label: 'Doanh Thu (Nghìn VNĐ)', data: data, backgroundColor: bgColors, borderRadius: 4 }]
+            datasets: [{ label: 'Doanh Thu (VNĐ)', data: data, backgroundColor: bgColors, borderRadius: 4 }]
         },
         options: {
             responsive: true,
@@ -782,3 +961,110 @@ function renderDowChart(dowData) {
         }
     });
 }
+
+function renderLostSaleSection(lostSaleTable, lostCard, lostHotspots) {
+    const tbodyReason = document.getElementById('lostSaleTableBody');
+    if (tbodyReason && Array.isArray(lostSaleTable)) {
+        if (lostSaleTable.length === 0) {
+            tbodyReason.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #888;">Chưa có dữ liệu rớt đơn trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodyReason.innerHTML = lostSaleTable.map(item => `<tr>
+                <td style="text-align: left;">${item.reason}</td>
+                <td>${formatNum(item.count)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.pct}</td>
+            </tr>`).join('');
+        }
+    }
+
+    if (lostCard) {
+        const countEl = document.getElementById('lostCardCount');
+        const cvrEl = document.getElementById('lostCardCvr');
+        const rateEl = document.getElementById('lostCardRate');
+        if (countEl) countEl.innerText = formatNum(lostCard.count || 0);
+        if (cvrEl) cvrEl.innerText = (lostCard.cvr || '0.0') + '%';
+        if (rateEl) rateEl.innerText = formatNum(lostCard.count || 0) + ' lượt';
+    }
+
+    const tbodyHotspot = document.getElementById('lostHotspotTableBody');
+    if (tbodyHotspot && Array.isArray(lostHotspots)) {
+        if (lostHotspots.length === 0) {
+            tbodyHotspot.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #888;">Chưa có điểm nóng rớt đơn trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodyHotspot.innerHTML = lostHotspots.map(item => `<tr>
+                <td style="text-align: left; font-weight: bold;">${item.sr}</td>
+                <td>${formatNum(item.trf)}</td>
+                <td>${formatNum(item.lost)}</td>
+                <td style="font-weight: bold; color: #C62828;">${item.lostPct}</td>
+                <td style="text-align: left; color: #bbb;">${item.reason}</td>
+                <td><span class="badge" style="background: rgba(198, 40, 40, 0.15); color: #C62828; border: 1px solid #C62828; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status}</span></td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.action}</td>
+            </tr>`).join('');
+        }
+    }
+}
+
+function renderHourlyTable(hourlyTable) {
+    const tbody = document.getElementById('hourlyTableBody');
+    if (tbody && Array.isArray(hourlyTable)) {
+        if (hourlyTable.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #888;">Chưa có dữ liệu khung giờ trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbody.innerHTML = hourlyTable.map(item => `<tr>
+                <td>${item.slot}</td>
+                <td>${formatNum(item.trf)}</td>
+                <td>${formatNum(item.buy)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.cvr}</td>
+                <td>${formatVNĐ(item.rev)}</td>
+            </tr>`).join('');
+        }
+    }
+}
+
+function renderCustomerBehaviorSection(purposeTable, basketTable, fullSaleTypeTable) {
+    const tbodyPurpose = document.getElementById('purposeTableBody');
+    if (tbodyPurpose && Array.isArray(purposeTable)) {
+        if (purposeTable.length === 0) {
+            tbodyPurpose.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #888;">Chưa có dữ liệu mục đích trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodyPurpose.innerHTML = purposeTable.map(item => `<tr>
+                <td style="text-align: left;">${item.purpose}</td>
+                <td>${formatNum(item.buy)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.pct}</td>
+                <td>${item.eval}</td>
+            </tr>`).join('');
+        }
+    }
+
+    const tbodyBasket = document.getElementById('basketTableBody');
+    if (tbodyBasket && Array.isArray(basketTable)) {
+        if (basketTable.length === 0) {
+            tbodyBasket.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #888;">Chưa có dữ liệu giỏ hàng trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodyBasket.innerHTML = basketTable.map(item => `<tr>
+                <td style="text-align: left;">${item.basket}</td>
+                <td>${formatNum(item.invoices)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.pct}</td>
+                <td>${item.rec}</td>
+            </tr>`).join('');
+        }
+    }
+
+    const tbodySaleType = document.getElementById('fullSaleTypeTableBody');
+    if (tbodySaleType && Array.isArray(fullSaleTypeTable)) {
+        if (fullSaleTypeTable.length === 0) {
+            tbodySaleType.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #888;">Chưa có dữ liệu hình thức mua trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodySaleType.innerHTML = fullSaleTypeTable.map(item => `<tr>
+                <td style="text-align: left; font-weight: bold;">${item.saleType}</td>
+                <td>${formatNum(item.buy)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.pct}</td>
+                <td>${formatVNĐ(item.revenue)}</td>
+                <td>${formatVNĐ(item.aov)}</td>
+                <td><span class="badge" style="background: rgba(152, 113, 71, 0.2); color: #987147; border: 1px solid #987147; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status}</span></td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.insight}</td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.action}</td>
+            </tr>`).join('');
+        }
+    }
+}
+
