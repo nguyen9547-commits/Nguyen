@@ -842,7 +842,7 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
         sourcesTable: sourcesTable,
         sourceSaleTypeTable: sourceSaleTypeTable,
         lostSaleTable: lostSaleTable,
-        lostCard: { count: lost, cvr: traffic > 0 ? ((lost / traffic) * 100).toFixed(1) : "0.0" },
+        lostCard: { count: lost, cvr: (purchases + lost) > 0 ? ((lost / (purchases + lost)) * 100).toFixed(1) : "0.0" },
         lostHotspots: lostHotspots,
         hourlyTable: hourlyTable,
         purposeTable: purposeTable,

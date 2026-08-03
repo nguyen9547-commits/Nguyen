@@ -316,7 +316,7 @@ function doGet(e) {
 
     var lostCard = {
       count: calcLost,
-      cvr: trf > 0 ? ((calcLost / trf) * 100).toFixed(1) : "0.0"
+      cvr: (buy + calcLost) > 0 ? ((calcLost / (buy + calcLost)) * 100).toFixed(1) : "0.0"
     };
 
     var lostHotspots = srList.map(function(s) {
