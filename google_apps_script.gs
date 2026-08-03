@@ -323,7 +323,9 @@ function doGet(e) {
       dailyTrend: dailyTrend,
       showrooms: srList,
       sources: srcList,
+      sourcesTable: srcList,
       lostSales: lostList,
+      lostSaleTable: lostList,
       products: {
         labels: prodKeys,
         productsQt: prodQt,

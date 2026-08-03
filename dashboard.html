@@ -801,34 +801,104 @@
         <section id="sec-khach-hang">
             <div class="section-header">
                 <i class="fa-solid fa-users" style="color: var(--toasted-umber);"></i>
-                <h3>4. PHÂN TÍCH NGUỒN KHÁCH HÀNG & LOẠI KHÁCH HÀNG</h3>
+                <h3>4. PHÂN TÍCH LOẠI KHÁCH HÀNG & NGUỒN KHÁCH HÀNG</h3>
             </div>
-            <div class="grid-2">
+
+            <!-- 4.1 BẢNG PHÂN TÍCH THEO LOẠI KHÁCH HÀNG (KHÁCH MỚI VS KHÁCH CỦ) -->
+            <div class="grid-2" style="margin-bottom: 20px;">
                 <div class="dashboard-box">
                     <div class="box-title">
-                        <span>TỶ TRỌNG NGUỒN KHÁCH HÀNG</span>
-                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>4.1. TỶ TRỌNG KHÁCH MỚI VS KHÁCH CỦ</span>
+                        <i class="fa-solid fa-user-tag"></i>
                     </div>
                     <div class="chart-container">
-                        <canvas id="customerSourceChart"></canvas>
+                        <canvas id="custTypeChart"></canvas>
                     </div>
                 </div>
                 <div class="dashboard-box">
                     <div class="box-title">
-                        <span>ĐÁNH GIÁ CHẤT LƯỢNG KÊNH NGUỒN KHÁCH</span>
-                        <i class="fa-solid fa-star"></i>
+                        <span>4.1. CHI TIẾT LOẠI KHÁCH HÀNG (MỚI VS CỦ)</span>
+                        <i class="fa-solid fa-users-between-lines"></i>
                     </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Loại Khách Hàng</th>
+                                    <th>TRF</th>
+                                    <th>Tỷ Trọng</th>
+                                    <th>PUR</th>
+                                    <th>Chưa Mua</th>
+                                    <th>CVR %</th>
+                                    <th>Doanh Thu</th>
+                                    <th>AOV</th>
+                                    <th>RPV</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="custTypeTableBody">
+                                <!-- Render bằng dashboard_v4.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.2 BẢNG PHÂN TÍCH CHI TIẾT THEO NGUỒN KHÁCH HÀNG -->
+            <div class="dashboard-box" style="margin-bottom: 20px;">
+                <div class="box-title">
+                    <span>4.2. PHÂN TÍCH CHI TIẾT KÊNH NGUỒN KHÁCH HÀNG (MARKETING & WALK-IN)</span>
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div style="overflow-x: auto;">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th style="text-align: left;">Nguồn Khách</th>
-                                <th>Lượt Khách</th>
-                                <th>Tỷ Trọng</th>
+                                <th style="text-align: left;">Nguồn Khách Hàng</th>
+                                <th>TRF</th>
+                                <th>Tỷ Trọng %</th>
+                                <th>Khách Mua (PUR)</th>
+                                <th>Chưa Mua (NP)</th>
                                 <th>CVR %</th>
-                                <th>Đánh Giá Kênh</th>
+                                <th>Doanh Thu (REV)</th>
+                                <th>Giá Trị HĐ TB (AOV)</th>
+                                <th>DT / Khách (RPV)</th>
+                                <th>Status</th>
+                                <th style="text-align: left;">Nhận Định Quản Trị</th>
+                                <th style="text-align: left;">Hành Động Đề Xuất</th>
                             </tr>
                         </thead>
                         <tbody id="sourceTableBody">
+                            <!-- Render bằng dashboard_v4.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4.3 MA TRẬN NGUỒN KHÁCH VS HÌNH THỨC MUA -->
+            <div class="dashboard-box" style="margin-bottom: 20px;">
+                <div class="box-title">
+                    <span>4.3. PHÂN TÍCH NGUỒN KHÁCH VS HÌNH THỨC MUA (NGUYÊN GIÁ VS ƯU ĐÃI/SALE)</span>
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Nguồn Khách Hàng</th>
+                                <th>Tổng Đơn Mua</th>
+                                <th>Đơn Nguyên Giá</th>
+                                <th>% Nguyên Giá</th>
+                                <th>Đơn Ưu Đãi (Sale)</th>
+                                <th>% Ưu Đãi</th>
+                                <th>DT Nguyên Giá</th>
+                                <th>DT Ưu Đãi</th>
+                                <th>Status</th>
+                                <th style="text-align: left;">Nhận Định Quản Trị</th>
+                                <th style="text-align: left;">Hành Động Đề Xuất</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sourceSaleTypeTableBody">
                             <!-- Render bằng dashboard_v4.js -->
                         </tbody>
                     </table>

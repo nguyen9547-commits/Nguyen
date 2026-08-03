@@ -239,11 +239,38 @@ function updateUI(d) {
     renderDailyTrendChart(d.dailyTrend);
     renderShowroomCharts(d.showrooms);
     renderProductCharts(d.products);
-    renderCustomerSourceChart(d.sources, d.sourcesTable);
+    renderCustomerSection(d.custTypeTable, d.sourcesTable, d.sourceSaleTypeTable);
     renderLostSaleSection(d.lostSaleTable, d.lostCard, d.lostHotspots);
     renderHourlyTable(d.hourlyTable);
     renderCustomerBehaviorSection(d.purposeTable, d.basketTable, d.fullSaleTypeTable);
     renderDowChart(d.dow);
+}
+
+function classifyCustomerSource(srcStr) {
+    if (!srcStr) return "Khác";
+    var s = String(srcStr).toLowerCase().trim();
+    if (s.indexOf("đi ngang") !== -1 || s.indexOf("walk-in") !== -1 || s.indexOf("vãng khách") !== -1) {
+        return "Đi ngang cửa hàng";
+    }
+    if (s.indexOf("facebook") !== -1 || s.indexOf("tiktok") !== -1 || s.indexOf("marketing") !== -1 || s.indexOf("fb") !== -1 || s.indexOf("mkt") !== -1) {
+        return "Marketing (FB, TikTok)";
+    }
+    if (s.indexOf("giới thiệu") !== -1 || s.indexOf("gioi thieu") !== -1 || s.indexOf("bạn bè") !== -1) {
+        return "Khách được giới thiệu";
+    }
+    if (s.indexOf("quay lại") !== -1 || s.indexOf("quay lai") !== -1 || s.indexOf("chủ động") !== -1 || s.indexOf("chu dong") !== -1 || s.indexOf("thân thiết") !== -1) {
+        return "Khách chủ động quay lại";
+    }
+    return "Khác";
+}
+
+function classifyCustomerType(custStr) {
+    if (!custStr) return "Khách mới (Khách lần đầu)";
+    var c = String(custStr).toLowerCase().trim();
+    if (c.indexOf("cũ") !== -1 || c.indexOf("cu") !== -1 || c.indexOf("quay lại") !== -1 || c.indexOf("thân") !== -1) {
+        return "Khách hàng cũ (Khách quay lại)";
+    }
+    return "Khách mới (Khách lần đầu)";
 }
 
 // BỘ DỮ LIỆU CHÍNH XÁC CÁC PHIẾU KHẢO SÁT THÔ
@@ -427,9 +454,16 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
     var srMap = {}, dateMap = {}, dowMap = [0, 0, 0, 0, 0, 0, 0];
     var prodQtMap = {}, prodMuaMap = {}, prodRevMap = {};
 
-    var srcNames = ["Đi ngang cửa hàng", "Khách chủ động quay lại", "Khách được giới thiệu", "Marketing (FB, TikTok)"];
+    var custTypeNames = ["Khách mới (Khách lần đầu)", "Khách hàng cũ (Khách quay lại)"];
+    var custTypeMap = {};
+    custTypeNames.forEach(function(n) { custTypeMap[n] = { name: n, trf: 0, buy: 0, rev: 0 }; });
+
+    var srcNames = ["Đi ngang cửa hàng", "Marketing (FB, TikTok)", "Khách được giới thiệu", "Khách chủ động quay lại", "Khác"];
     var srcMap = {};
-    srcNames.forEach(function(n) { srcMap[n] = { name: n, trf: 0, buy: 0 }; });
+    srcNames.forEach(function(n) { srcMap[n] = { name: n, trf: 0, buy: 0, rev: 0 }; });
+
+    var sourceSaleTypeMap = {};
+    srcNames.forEach(function(n) { sourceSaleTypeMap[n] = { name: n, origBuy: 0, discBuy: 0, origRev: 0, discRev: 0 }; });
 
     var lostReasonMap = {};
     var slotArr = ["08:00 - 11:00", "11:00 - 13:00", "13:00 - 15:00", "15:00 - 17:00", "17:00 - 19:00", "19:00 - 22:00"];
@@ -468,12 +502,32 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
         if (!isExchange) srMap[r.sr].trf++;
         if (!isPur && !isExchange) srMap[r.sr].lost++;
 
-        // Nguồn khách
-        var sName = r.src || "Đi ngang cửa hàng";
-        var matchedSrc = srcNames.find(function(n) { return sName.indexOf(n) !== -1 || n.indexOf(sName) !== -1; }) || "Đi ngang cửa hàng";
-        if (!srcMap[matchedSrc]) srcMap[matchedSrc] = { name: matchedSrc, trf: 0, buy: 0 };
+        // 4.1 Loại khách hàng
+        var matchedCust = classifyCustomerType(r.cust);
+        if (!custTypeMap[matchedCust]) custTypeMap[matchedCust] = { name: matchedCust, trf: 0, buy: 0, rev: 0 };
+        if (!isExchange) custTypeMap[matchedCust].trf++;
+        if (isPur) {
+            custTypeMap[matchedCust].buy++;
+            custTypeMap[matchedCust].rev += r.rev;
+        }
+
+        // 4.2 Nguồn khách hàng & 4.3 Ma trận Nguồn vs Hình thức mua
+        var matchedSrc = classifyCustomerSource(r.src);
+        if (!srcMap[matchedSrc]) srcMap[matchedSrc] = { name: matchedSrc, trf: 0, buy: 0, rev: 0 };
         if (!isExchange) srcMap[matchedSrc].trf++;
-        if (isPur) srcMap[matchedSrc].buy++;
+        if (isPur) {
+            srcMap[matchedSrc].buy++;
+            srcMap[matchedSrc].rev += r.rev;
+
+            var sType = r.saleType || (r.rev >= 2000000 ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT);
+            if (sType === FORM_PURCHASE_ORIGINAL) {
+                sourceSaleTypeMap[matchedSrc].origBuy++;
+                sourceSaleTypeMap[matchedSrc].origRev += r.rev;
+            } else {
+                sourceSaleTypeMap[matchedSrc].discBuy++;
+                sourceSaleTypeMap[matchedSrc].discRev += r.rev;
+            }
+        }
 
         // Lost Sale
         if (!isPur && !isExchange) {
@@ -501,10 +555,10 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
             else if (qNum === 2) basketMap["Đơn 2 SP (Double)"]++;
             else basketMap["Đơn 3+ SP (Multi)"]++;
 
-            var sType = r.saleType || (r.rev >= 2000000 ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT);
-            if (!saleTypeMap[sType]) saleTypeMap[sType] = { buy: 0, rev: 0 };
-            saleTypeMap[sType].buy++;
-            saleTypeMap[sType].rev += r.rev;
+            var sTypeFull = r.saleType || (r.rev >= 2000000 ? FORM_PURCHASE_ORIGINAL : FORM_PURCHASE_DISCOUNT);
+            if (!saleTypeMap[sTypeFull]) saleTypeMap[sTypeFull] = { buy: 0, rev: 0 };
+            saleTypeMap[sTypeFull].buy++;
+            saleTypeMap[sTypeFull].rev += r.rev;
         }
 
         if (!dateMap[r.date]) dateMap[r.date] = 0;
@@ -590,13 +644,82 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
         };
     }).sort(function(a,b){ return parseFloat(b.cvr) - parseFloat(a.cvr); });
 
-    var sourcesTable = Object.keys(srcMap).map(function(k) {
-        var item = srcMap[k];
+    // 4.1 Bảng Khách Mới vs Khách Cũ
+    var custTypeTable = custTypeNames.map(function(k) {
+        var item = custTypeMap[k] || { name: k, trf: 0, buy: 0, rev: 0 };
+        var np = Math.max(item.trf - item.buy, 0);
         var pct = traffic > 0 ? ((item.trf / traffic) * 100).toFixed(1) + '%' : '0.0%';
-        var cvrNum = item.trf > 0 ? ((item.buy / item.trf) * 100).toFixed(1) : '0.0';
-        var ev = parseFloat(cvrNum) >= 75 ? 'Siêu Hiệu Quả' : (parseFloat(cvrNum) >= 60 ? 'Chất Lượng Cao' : (item.trf > 0 ? 'Cần Tăng Chốt' : 'Chưa có dữ liệu'));
-        return { name: item.name, trf: item.trf, pct: pct, cvr: cvrNum + '%', eval: ev };
-    }).sort(function(a,b){ return b.trf - a.trf; });
+        var cvrNum = item.trf > 0 ? (item.buy / item.trf) * 100 : 0;
+        var aov = item.buy > 0 ? Math.round(item.rev / item.buy) : 0;
+        var rpv = item.trf > 0 ? Math.round(item.rev / item.trf) : 0;
+        var st = cvrNum >= 50 ? '🟢 Tốt' : (cvrNum >= 35 ? '🟡 Theo dõi' : '🔴 Cần cải thiện');
+        return {
+            name: k,
+            trf: item.trf,
+            pct: pct,
+            buy: item.buy,
+            np: np,
+            cvr: cvrNum.toFixed(1) + '%',
+            revenue: item.rev,
+            aov: aov,
+            rpv: rpv,
+            status: st
+        };
+    });
+
+    // 4.2 Bảng Phân Tích 5 Kênh Nguồn Khách
+    var sourcesTable = srcNames.map(function(k) {
+        var item = srcMap[k] || { name: k, trf: 0, buy: 0, rev: 0 };
+        var np = Math.max(item.trf - item.buy, 0);
+        var pct = traffic > 0 ? ((item.trf / traffic) * 100).toFixed(1) + '%' : '0.0%';
+        var cvrNum = item.trf > 0 ? (item.buy / item.trf) * 100 : 0;
+        var aov = item.buy > 0 ? Math.round(item.rev / item.buy) : 0;
+        var rpv = item.trf > 0 ? Math.round(item.rev / item.trf) : 0;
+        var st = cvrNum >= 60 ? '🟢 Tốt' : (cvrNum >= 40 ? '🟡 Theo dõi' : '🔴 Cần cải thiện');
+        var ins = k === "Đi ngang cửa hàng" ? 'Cần cải thiện tỷ lệ chuyển đổi chiều kịch bản đón tiếp' :
+                  (k === "Marketing (FB, TikTok)" ? 'Cần cải thiện tỷ lệ chuyển đổi chiều kịch bản đón tiếp' :
+                  (k === "Khách được giới thiệu" ? 'Chất lượng khách cao, giữ chân mối quan hệ' :
+                  (k === "Khách chủ động quay lại" ? 'Khách hàng thân thiết tạo sự duy trì tỷ lệ nguồn khách' : 'Kênh nguồn hỗn hợp khác')));
+        var act = cvrNum >= 60 ? 'Duy trì kịch bản chăm sóc' : 'Cần cải thiện tỷ lệ chuyển đổi chiều kịch bản đón tiếp';
+        return {
+            name: k,
+            trf: item.trf,
+            pct: pct,
+            buy: item.buy,
+            np: np,
+            cvr: cvrNum.toFixed(1) + '%',
+            revenue: item.rev,
+            aov: aov,
+            rpv: rpv,
+            status: st,
+            insight: ins,
+            action: act
+        };
+    });
+
+    // 4.3 Bảng Ma Trận Nguồn Khách vs Hình Thức Mua
+    var sourceSaleTypeTable = srcNames.map(function(k) {
+        var item = sourceSaleTypeMap[k] || { name: k, origBuy: 0, discBuy: 0, origRev: 0, discRev: 0 };
+        var totalBuy = item.origBuy + item.discBuy;
+        var origPct = totalBuy > 0 ? ((item.origBuy / totalBuy) * 100).toFixed(1) + '%' : '0.0%';
+        var discPct = totalBuy > 0 ? ((item.discBuy / totalBuy) * 100).toFixed(1) + '%' : '0.0%';
+        var st = (totalBuy > 0 && (item.origBuy / totalBuy) >= 0.5) ? '🟢 Tốt' : '🟡 Theo dõi';
+        var ins = 'Khách sẵn sàng trả giá nguyên giá giữ vai trò tối ưu hóa giá gốc';
+        var act = 'Kiểm soát tỷ lệ ưu đãi combo';
+        return {
+            name: k,
+            totalBuy: totalBuy,
+            origBuy: item.origBuy,
+            origPct: origPct,
+            discBuy: item.discBuy,
+            discPct: discPct,
+            origRev: item.origRev,
+            discRev: item.discRev,
+            status: st,
+            insight: ins,
+            action: act
+        };
+    });
 
     var lostSaleTable = Object.keys(lostReasonMap).map(function(k) {
         var cnt = lostReasonMap[k];
@@ -674,8 +797,10 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
             productsMua: prodMua,
             bcgTable: bcgTable
         },
+        custTypeTable: custTypeTable,
         sources: sourcesTable,
         sourcesTable: sourcesTable,
+        sourceSaleTypeTable: sourceSaleTypeTable,
         lostSaleTable: lostSaleTable,
         lostCard: { count: lost, cvr: traffic > 0 ? ((lost / traffic) * 100).toFixed(1) : "0.0" },
         lostHotspots: lostHotspots,
@@ -863,40 +988,42 @@ function renderProductCharts(pData) {
     }
 }
 
-function renderCustomerSourceChart(sources, sourcesTable) {
-    const ctxDonut = document.getElementById('customerSourceChart') || document.getElementById('sourceDonutChart');
-    const ctxBar = document.getElementById('sourceCvrBarChart');
-    const tbodySource = document.getElementById('sourceTableBody');
-
-    const srcData = sourcesTable || sources || [];
-    if (tbodySource && Array.isArray(srcData)) {
-        if (srcData.length === 0) {
-            tbodySource.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #888;">Chưa có dữ liệu nguồn khách trong khoảng thời gian này</td></tr>`;
+function renderCustomerSection(custTypeTable, sourcesTable, sourceSaleTypeTable) {
+    // 4.1 Bảng Khách Mới vs Khách Cũ
+    const tbodyCustType = document.getElementById('custTypeTableBody');
+    if (tbodyCustType && Array.isArray(custTypeTable)) {
+        if (custTypeTable.length === 0) {
+            tbodyCustType.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #888;">Chưa có dữ liệu loại khách hàng</td></tr>`;
         } else {
-            tbodySource.innerHTML = srcData.map(item => `<tr>
-                <td style="text-align: left;">${item.name}</td>
+            tbodyCustType.innerHTML = custTypeTable.map(item => `<tr>
+                <td style="text-align: left; font-weight: bold;">${item.name}</td>
                 <td>${formatNum(item.trf)}</td>
-                <td>${item.pct || '0.0%'}</td>
-                <td style="font-weight: bold; color: #987147;">${item.cvr || '0.0%'}</td>
-                <td>${item.eval || 'Chưa rõ'}</td>
+                <td>${item.pct}</td>
+                <td>${formatNum(item.buy)}</td>
+                <td>${formatNum(item.np)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.cvr}</td>
+                <td>${formatVNĐ(item.revenue)}</td>
+                <td>${formatVNĐ(item.aov)}</td>
+                <td>${formatVNĐ(item.rpv)}</td>
+                <td><span class="badge" style="background: rgba(152, 113, 71, 0.2); color: #987147; border: 1px solid #987147; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status}</span></td>
             </tr>`).join('');
         }
     }
 
-    if (ctxDonut && charts.srcDonut) charts.srcDonut.destroy();
-    if (ctxBar && charts.srcBar) charts.srcBar.destroy();
-
-    const isLight = currentTheme === 'light';
-    const textColor = isLight ? '#0B0A08' : '#F6EADE';
-
-    if (ctxDonut) {
-        const labels = (sources || []).map(s => s.name);
-        const trfData = (sources || []).map(s => s.trf);
-        charts.srcDonut = new Chart(ctxDonut, {
+    // Biểu đồ Doughnut 4.1 Khách Mới vs Khách Cũ
+    const ctxCustType = document.getElementById('custTypeChart');
+    if (ctxCustType && Array.isArray(custTypeTable)) {
+        if (charts.custType) charts.custType.destroy();
+        const isLight = currentTheme === 'light';
+        const textColor = isLight ? '#0B0A08' : '#F6EADE';
+        charts.custType = new Chart(ctxCustType, {
             type: 'doughnut',
             data: {
-                labels: labels,
-                datasets: [{ data: trfData, backgroundColor: ['#987147', '#B8860B', '#2E7D32', '#C62828', '#1565C0'] }]
+                labels: custTypeTable.map(c => c.name.split(' (')[0]),
+                datasets: [{
+                    data: custTypeTable.map(c => c.trf),
+                    backgroundColor: ['#987147', '#B8860B']
+                }]
             },
             options: {
                 responsive: true,
@@ -906,27 +1033,49 @@ function renderCustomerSourceChart(sources, sourcesTable) {
         });
     }
 
-    if (ctxBar) {
-        const sorted = (sources || []).slice().sort((a, b) => parseFloat(b.cvr) - parseFloat(a.cvr));
-        const labels = sorted.map(s => s.name);
-        const cvrData = sorted.map(s => parseFloat(s.cvr));
-        charts.srcBar = new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{ label: 'Tỷ Lệ Chốt (%)', data: cvrData, backgroundColor: '#987147', borderRadius: 4 }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: textColor, callback: v => v + '%' } },
-                    y: { grid: { display: false }, ticks: { color: textColor } }
-                }
-            }
-        });
+    // 4.2 Bảng Chi Tiết 5 Kênh Nguồn Khách
+    const tbodySource = document.getElementById('sourceTableBody');
+    if (tbodySource && Array.isArray(sourcesTable)) {
+        if (sourcesTable.length === 0) {
+            tbodySource.innerHTML = `<tr><td colspan="12" style="text-align: center; color: #888;">Chưa có dữ liệu nguồn khách trong khoảng thời gian này</td></tr>`;
+        } else {
+            tbodySource.innerHTML = sourcesTable.map(item => `<tr>
+                <td style="text-align: left; font-weight: bold;">${item.name}</td>
+                <td>${formatNum(item.trf)}</td>
+                <td>${item.pct}</td>
+                <td>${formatNum(item.buy)}</td>
+                <td>${formatNum(item.np)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.cvr}</td>
+                <td>${formatVNĐ(item.revenue)}</td>
+                <td>${formatVNĐ(item.aov)}</td>
+                <td>${formatVNĐ(item.rpv)}</td>
+                <td><span class="badge" style="background: rgba(152, 113, 71, 0.2); color: #987147; border: 1px solid #987147; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status}</span></td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.insight}</td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.action}</td>
+            </tr>`).join('');
+        }
+    }
+
+    // 4.3 Bảng Ma Trận Nguồn Khách vs Hình Thức Mua
+    const tbodySourceSaleType = document.getElementById('sourceSaleTypeTableBody');
+    if (tbodySourceSaleType && Array.isArray(sourceSaleTypeTable)) {
+        if (sourceSaleTypeTable.length === 0) {
+            tbodySourceSaleType.innerHTML = `<tr><td colspan="11" style="text-align: center; color: #888;">Chưa có dữ liệu ma trận nguồn khách vs hình thức mua</td></tr>`;
+        } else {
+            tbodySourceSaleType.innerHTML = sourceSaleTypeTable.map(item => `<tr>
+                <td style="text-align: left; font-weight: bold;">${item.name}</td>
+                <td>${formatNum(item.totalBuy)}</td>
+                <td>${formatNum(item.origBuy)}</td>
+                <td style="font-weight: bold; color: #987147;">${item.origPct}</td>
+                <td>${formatNum(item.discBuy)}</td>
+                <td>${item.discPct}</td>
+                <td>${formatVNĐ(item.origRev)}</td>
+                <td>${formatVNĐ(item.discRev)}</td>
+                <td><span class="badge" style="background: rgba(152, 113, 71, 0.2); color: #987147; border: 1px solid #987147; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status}</span></td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.insight}</td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.action}</td>
+            </tr>`).join('');
+        }
     }
 }
 
