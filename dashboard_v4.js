@@ -196,12 +196,30 @@ function setupAutoRefresh() {
 }
 
 function updateUI(d) {
-    const k = d.kpi || {};
-
+    d = d || {};
     const startDate = document.getElementById('startDate') ? document.getElementById('startDate').value : '2026-06-01';
     const endDate = document.getElementById('endDate') ? document.getElementById('endDate').value : '2026-06-30';
     const showroom = document.getElementById('showroomSelect') ? document.getElementById('showroomSelect').value : 'Toàn Hệ Thống';
     const source = document.getElementById('sourceSelect') ? document.getElementById('sourceSelect').value : 'Tất cả nguồn khách';
+
+    // BỘ TÍNH TOÁN DỰ PHÒNG CHUẨN ĐỂ ĐỒNG BỘ 100% SỐ LIỆU NẾU API THIẾU MẢNG DỮ LIỆU
+    const fallback = computeUniversalDynamicData(startDate, endDate, showroom, source);
+
+    const k = (d.kpi && Number(d.kpi.traffic) > 0) ? d.kpi : fallback.kpi;
+    const dailyTrend = (d.dailyTrend && d.dailyTrend.length > 0) ? d.dailyTrend : fallback.dailyTrend;
+    const showrooms = (d.showrooms && d.showrooms.length > 0) ? d.showrooms : fallback.showrooms;
+    const products = (d.products && d.products.labels && d.products.labels.length > 0) ? d.products : fallback.products;
+    const custTypeTable = (d.custTypeTable && d.custTypeTable.length > 0) ? d.custTypeTable : fallback.custTypeTable;
+    const sourcesTable = (d.sourcesTable && d.sourcesTable.length > 0) ? d.sourcesTable : fallback.sourcesTable;
+    const sourceSaleTypeTable = (d.sourceSaleTypeTable && d.sourceSaleTypeTable.length > 0) ? d.sourceSaleTypeTable : fallback.sourceSaleTypeTable;
+    const lostSaleTable = (d.lostSaleTable && d.lostSaleTable.length > 0) ? d.lostSaleTable : fallback.lostSaleTable;
+    const lostCard = d.lostCard || fallback.lostCard;
+    const lostHotspots = (d.lostHotspots && d.lostHotspots.length > 0) ? d.lostHotspots : fallback.lostHotspots;
+    const hourlyTable = (d.hourlyTable && d.hourlyTable.length > 0) ? d.hourlyTable : fallback.hourlyTable;
+    const purposeTable = (d.purposeTable && d.purposeTable.length > 0) ? d.purposeTable : fallback.purposeTable;
+    const basketTable = (d.basketTable && d.basketTable.length > 0) ? d.basketTable : fallback.basketTable;
+    const fullSaleTypeTable = (d.fullSaleTypeTable && d.fullSaleTypeTable.length > 0) ? d.fullSaleTypeTable : fallback.fullSaleTypeTable;
+    const dow = (d.dow && d.dow.length > 0) ? d.dow : fallback.dow;
 
     const dStart = parseAnyDate(startDate);
     const dEnd = parseAnyDate(endDate);
@@ -236,14 +254,15 @@ function updateUI(d) {
     document.getElementById('kpiUPT').innerText = uptVal;
     document.getElementById('kpiRPV').innerText = formatVNĐ(rpvVal);
 
-    renderDailyTrendChart(d.dailyTrend);
-    renderShowroomCharts(d.showrooms);
-    renderProductCharts(d.products);
-    renderCustomerSection(d.custTypeTable, d.sourcesTable, d.sourceSaleTypeTable);
-    renderLostSaleSection(d.lostSaleTable, d.lostCard, d.lostHotspots);
-    renderHourlyTable(d.hourlyTable);
-    renderCustomerBehaviorSection(d.purposeTable, d.basketTable, d.fullSaleTypeTable);
-    renderDowChart(d.dow);
+    renderDailyTrendChart(dailyTrend);
+    renderShowroomCharts(showrooms);
+    renderShowroomTable(showrooms);
+    renderProductCharts(products);
+    renderCustomerSection(custTypeTable, sourcesTable, sourceSaleTypeTable);
+    renderLostSaleSection(lostSaleTable, lostCard, lostHotspots);
+    renderHourlyTable(hourlyTable);
+    renderCustomerBehaviorSection(purposeTable, basketTable, fullSaleTypeTable);
+    renderDowChart(dow);
 }
 
 function classifyCustomerSource(srcStr) {
@@ -911,6 +930,43 @@ function renderShowroomCharts(srData) {
             }
         }
     });
+}
+
+function renderShowroomTable(srData) {
+    const tbody = document.getElementById('showroomTableBody');
+    if (tbody && Array.isArray(srData)) {
+        if (srData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: #888;">Chưa có dữ liệu showroom trong khoảng thời gian này</td></tr>`;
+        } else {
+            const sorted = srData.slice().sort((a, b) => (b.revenue || 0) - (a.revenue || 0));
+            tbody.innerHTML = sorted.map(item => {
+                const trf = item.trf || 0;
+                const buy = item.buy || (item.purchases || 0);
+                const lost = item.lost !== undefined ? item.lost : Math.max(trf - buy, 0);
+                const rev = item.revenue || 0;
+                const cvrStr = item.cvr !== undefined ? (typeof item.cvr === 'number' ? item.cvr.toFixed(1) + '%' : item.cvr) : (trf > 0 ? ((buy / trf) * 100).toFixed(1) + '%' : '0.0%');
+                const aov = buy > 0 ? Math.round(rev / buy) : 0;
+                const rpv = trf > 0 ? Math.round(rev / trf) : 0;
+                const cvrNum = trf > 0 ? (buy / trf) * 100 : 0;
+                const status = cvrNum >= 70 ? '🟢 Tốt' : (cvrNum >= 50 ? '🟡 Theo dõi' : '🔴 Cần cải thiện');
+                const ins = cvrNum >= 70 ? 'Hiệu suất showroom xuất sắc, CVR & Doanh thu cao' : (cvrNum >= 50 ? 'Hiệu suất trung bình, cần đẩy mạnh bán kèm' : 'Cần tối ưu tỷ lệ chốt và rà soát ca trực');
+                const act = cvrNum >= 70 ? 'Duy trì mô hình VMD & kịch bản đón tiếp' : 'Tăng cường đào tạo chốt sale & giám sát ca';
+                return `<tr>
+                    <td style="text-align: left; font-weight: bold;">${item.name}</td>
+                    <td>${formatNum(trf)}</td>
+                    <td>${formatNum(buy)}</td>
+                    <td>${formatNum(lost)}</td>
+                    <td style="font-weight: bold; color: #987147;">${cvrStr}</td>
+                    <td>${formatVNĐ(rev)}</td>
+                    <td>${formatVNĐ(aov)}</td>
+                    <td>${formatVNĐ(rpv)}</td>
+                    <td><span class="badge" style="background: rgba(152, 113, 71, 0.2); color: #987147; border: 1px solid #987147; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${status}</span></td>
+                    <td style="text-align: left; font-size: 11px; color: #bbb;">${ins}</td>
+                    <td style="text-align: left; font-size: 11px; color: #bbb;">${act}</td>
+                </tr>`;
+            }).join('');
+        }
+    }
 }
 
 function renderProductCharts(pData) {
