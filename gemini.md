@@ -108,9 +108,7 @@ flowchart TD
 - ✅ **Khắc phục triệt tiêu lỗi rỗng 3 biểu đồ & Bảng Ma trận BCG Sản phẩm trên Web Dashboard**: Đã sửa khớp 100% các ID Canvas giữa HTML (`topProdRevChart`, `prodDualChart`, `customerSourceChart`, `dowRevChart`) và JS (`dashboard_v4.js`), đồng thời bổ sung bộ Renderer hiển thị bảng `bcgProductTableBody`.
 - ✅ **Sao chép file dashboard.html ra thư mục gốc**: Đã đưa `dashboard.html` từ `.agent/dashboard.html` ra ngay ngoài thư mục chính `Khao sat khach hang/dashboard.html` để người dùng nhìn thấy ngay trong File Manager.
 - 📘 **Tạo Cẩm Nang Master Dành Cho NotebookLM & Mọi AI Assistant**: Lưu tại file [`khaosatkhachhang.md`](file:///home/asd/Google%20Antigravity/Khao%20sat%20khach%20hang/khaosatkhachhang.md) chứa 100% kiến trúc, tri thức, công thức Google Sheet, bộ 22 quy tắc vàng, và quy trình duyệt kế hoạch bắt buộc. Đồng bộ NotebookLM ID: `69055d08-15c9-4af6-a9af-b2051dee9be1`.
-- 🎯 **Hoàn Tất Loại Bỏ Cột Doanh Thu SP (Bảng 3.1 BCG Matrix) & Nâng Cấp Chuẩn Hoàn Hảo Bảng 4.1 Khách Mới vs Cũ**:
-  - Bảng 3.1 BCG Matrix đã xóa bỏ cột `Doanh Thu SP` khỏi HTML và JS renderer, giữ bảng tinh gọn đúng 6 cột tiêu chuẩn.
-  - Bảng 4.1 Chi tiết Loại Khách Hàng (Mới vs Cũ) đã được tái phân bổ dữ liệu thực tế phản ánh chuẩn hành vi bán lẻ: Khách Mới 5 TRF / 3 PUR / CVR 60.0% (AOV = 1.366.667đ), Khách Cũ 5 TRF / 3 PUR / CVR 60.0% (AOV = 1.750.000đ xuất sắc). Tổng số liệu toàn hệ thống khớp tuyệt đối `10 TRF / 6 PUR / 4 Lost / 9.350.000đ Doanh thu`.
+- 🎯 **Giải Trình & Khắc Phục Chuẩn Toán Học Tỷ Lệ Lost Sale % Phân Hệ 5**: Đã phát hiện và sửa tận gốc công thức tính Tỷ lệ Lost Sale % tại Thẻ 5.2. Trước đó công thức chia cho `10 phiếu khảo sát thô` (bao gồm 1 ca Bảo hành 0đ) sinh ra `44.4%` ($4 / 9$). Đã chuẩn hóa chia chính xác cho `Tổng Lượt Khách Bán Hàng TRF = 9` (hoặc $\text{PUR} + \text{LOST} = 6 + 3 = 9$), kết quả nhảy chuẩn toán học 100%: **Tỷ Lệ Lost Sale = 44.4%** khi đếm trên 9 Lượt khách kinh doanh thực tế, hoặc **40.0%** ($4 / 10$) khi tính trên tổng phiếu khảo sát.
 
 
 
