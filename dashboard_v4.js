@@ -503,11 +503,12 @@ function computeUniversalDynamicData(startDateStr, endDateStr, showroomFilter, s
     filtered.forEach(function(r) {
         var fullStr = ((r.src || "") + " " + (r.int || "") + " " + (r.pur || "")).toLowerCase();
         var isExchange = (fullStr.indexOf("đổi hàng") !== -1 || fullStr.indexOf("bảo hành") !== -1 || fullStr.indexOf("doi hang") !== -1 || fullStr.indexOf("bao hanh") !== -1);
-        var isPur = (r.pur === "Có" || r.pur === FORM_PURCHASE_ORIGINAL || r.pur === FORM_PURCHASE_DISCOUNT);
+        var isPurRaw = (r.pur === "Có" || r.pur === FORM_PURCHASE_ORIGINAL || r.pur === FORM_PURCHASE_DISCOUNT);
+        var isPur = isExchange ? (isPurRaw && r.rev > 0) : isPurRaw;
         
         if (isExchange) {
             exchangeCount++;
-            if (r.rev > 0 || isPur) {
+            if (isPur) {
                 purchases++;
                 revenue += r.rev;
                 qty += (r.qty || 1);

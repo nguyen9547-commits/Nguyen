@@ -177,10 +177,11 @@ function doGet(e) {
       var fullStr = src + " " + purpose + " " + hasPur + " " + srcCol24;
       
       var isExchange = (fullStr.indexOf("đổi hàng") !== -1 || fullStr.indexOf("bảo hành") !== -1 || fullStr.indexOf("doi hang") !== -1 || fullStr.indexOf("bao hanh") !== -1);
-      var isPur = (r[25] === 1);
+      var isPurRaw = (r[25] === 1);
+      var rRev = Number(r[14]) || 0;
+      var isPur = isExchange ? (isPurRaw && rRev > 0) : isPurRaw;
       var isTrf = !isExchange && (r[24] === 1);
       var isLost = !isExchange && !isPur && (r[26] === 1);
-      var rRev = Number(r[14]) || 0;
       var q = Number(r[29]) || 1;
       
       if (r[13]) invSet.add(r[13].toString().trim());
