@@ -302,6 +302,23 @@ function doGet(e) {
     var calcLost = Math.max(trf - buy, 0);
     var calcInvoices = invSet.size > 0 ? invSet.size : buy;
 
+    var lostCard = {
+      count: calcLost,
+      cvr: trf > 0 ? ((calcLost / trf) * 100).toFixed(1) : "0.0"
+    };
+
+    var lostHotspots = srList.map(function(s) {
+      return {
+        sr: s.name,
+        trf: s.trf || 0,
+        lost: s.lost || 0,
+        lostPct: s.trf > 0 ? ((s.lost / s.trf) * 100).toFixed(1) + '%' : '0.0%',
+        reason: 'Theo dõi điểm rớt đơn',
+        status: s.lost > 0 ? '🟠 Cần Cải Thiện' : '🟢 Kiểm Soát Tốt',
+        action: s.lost > 0 ? 'Bổ sung tồn kho & đào tạo chốt sale' : 'Duy trì hiệu suất'
+      };
+    }).sort(function(a,b){ return b.lost - a.lost; });
+
     var result = {
       status: "success",
       source: "03_Bảng_Tính_KPI (Stateless Concurrent Mode)",
@@ -326,6 +343,8 @@ function doGet(e) {
       sourcesTable: srcList,
       lostSales: lostList,
       lostSaleTable: lostList,
+      lostCard: lostCard,
+      lostHotspots: lostHotspots,
       products: {
         labels: prodKeys,
         productsQt: prodQt,

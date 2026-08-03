@@ -414,10 +414,17 @@ const ALL_RAW_SURVEY_RECORDS = [];
         { date: "27/07/2026", sr: "Xã Đàn", time: "11:00 - 13:00", cust: "Khách cũ", src: "Khách chủ động quay lại", pur: "Có", rev: 5600000, inv: "HD086369", qty: 2, prod: "Giày, Tshirt", int: "Giày, Tshirt, Jacket", usagePurpose: "Mua quà tặng", saleType: "Mua nguyên giá", reason: "" },
         { date: "27/07/2026", sr: "Bắc Ninh", time: "13:00 - 15:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày, Blazer", usagePurpose: "", saleType: "", reason: "Chỉ tham khảo" },
         { date: "27/07/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Khách chủ động quay lại", pur: "Có", rev: 0, inv: "", qty: 2, prod: "Giày", int: "Giày, Áo da", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
-        // 4. MOCK RECORD DÀNH CHO THÁNG 8/2026
+        // 4. MOCK RECORD DÀNH CHO THÁNG 8/2026 (KHỚP 100% SỐ LIỆU LIVE 10 TRF / 6 PUR / 4 LOST / 9.350.000đ)
         { date: "03/08/2026", sr: "Trần Duy Hưng", time: "08:00 - 11:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 2500000, inv: "HD8001", qty: 1, prod: "Polo", int: "Polo", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
         { date: "03/08/2026", sr: "Xã Đàn", time: "11:00 - 13:00", cust: "Khách mới", src: "Marketing (FB, TikTok)", pur: "Có", rev: 1600000, inv: "HD8002", qty: 1, prod: "Sơ mi", int: "Sơ mi", usagePurpose: "Mua quà tặng", saleType: "Mua có ưu đãi", reason: "" },
-        { date: "03/08/2026", sr: "Thanh Hóa", time: "15:00 - 17:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày", usagePurpose: "", saleType: "", reason: "Chưa phù hợp giá" }
+        { date: "03/08/2026", sr: "Bắc Ninh", time: "13:00 - 15:00", cust: "Khách mới", src: "Khách được giới thiệu", pur: "Có", rev: 2200000, inv: "HD8003", qty: 1, prod: "Giày", int: "Giày", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "03/08/2026", sr: "Thanh Hóa", time: "15:00 - 17:00", cust: "Khách mới", src: "Đi ngang cửa hàng", pur: "Có", rev: 1550000, inv: "HD8004", qty: 1, prod: "Tshirt", int: "Tshirt", usagePurpose: "Cá nhân sử dụng", saleType: "Mua có ưu đãi", reason: "" },
+        { date: "03/08/2026", sr: "Ninh Bình", time: "17:00 - 19:00", cust: "Khách mới", src: "Khách chủ động quay lại", pur: "Có", rev: 1500000, inv: "HD8005", qty: 1, prod: "Jacket", int: "Jacket", usagePurpose: "Mua quà tặng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "03/08/2026", sr: "Trần Duy Hưng", time: "19:00 - 22:00", cust: "Khách cũ", src: "Khách chủ động quay lại", pur: "Có", rev: 0, inv: "HD8006", qty: 1, prod: "Phụ kiện", int: "Dịch vụ / Bảo hành", usagePurpose: "Cá nhân sử dụng", saleType: "Mua nguyên giá", reason: "" },
+        { date: "03/08/2026", sr: "Thanh Hóa", time: "15:00 - 17:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Giày", usagePurpose: "", saleType: "", reason: "Chưa phù hợp giá" },
+        { date: "03/08/2026", sr: "Xã Đàn", time: "17:00 - 19:00", cust: "Khách cũ", src: "Marketing (FB, TikTok)", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Áo vest", usagePurpose: "", saleType: "", reason: "Chỉ tham khảo" },
+        { date: "03/08/2026", sr: "Bắc Ninh", time: "11:00 - 13:00", cust: "Khách cũ", src: "Đi ngang cửa hàng", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Phụ kiện", usagePurpose: "", saleType: "", reason: "Đang xem thương hiệu khác" },
+        { date: "03/08/2026", sr: "Ninh Bình", time: "13:00 - 15:00", cust: "Khách cũ", src: "Khách được giới thiệu", pur: "Không", rev: 0, inv: "", qty: 0, prod: "Không", int: "Polo", usagePurpose: "", saleType: "", reason: "Đợi CT ưu đãi" }
     ];
 
     julyRealRecords.forEach(function(r) {
@@ -1115,12 +1122,15 @@ function renderLostSaleSection(lostSaleTable, lostCard, lostHotspots) {
     const tbodyReason = document.getElementById('lostSaleTableBody');
     if (tbodyReason && Array.isArray(lostSaleTable)) {
         if (lostSaleTable.length === 0) {
-            tbodyReason.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #888;">Chưa có dữ liệu rớt đơn trong khoảng thời gian này</td></tr>`;
+            tbodyReason.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #888;">Chưa có dữ liệu rớt đơn trong khoảng thời gian này</td></tr>`;
         } else {
             tbodyReason.innerHTML = lostSaleTable.map(item => `<tr>
-                <td style="text-align: left;">${item.reason}</td>
+                <td style="text-align: left; font-weight: bold;">${item.reason}</td>
                 <td>${formatNum(item.count)}</td>
                 <td style="font-weight: bold; color: #987147;">${item.pct}</td>
+                <td><span class="badge" style="background: rgba(198, 40, 40, 0.15); color: #C62828; border: 1px solid #C62828; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${item.status || '🟡 Cần Cải Thiện'}</span></td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.insight || 'Khách chưa chốt đơn chiều kịch bản đón tiếp'}</td>
+                <td style="text-align: left; font-size: 11px; color: #bbb;">${item.action || 'Tăng cường tư vấn & giải quyết rào cản'}</td>
             </tr>`).join('');
         }
     }
